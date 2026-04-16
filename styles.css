@@ -2598,3 +2598,55 @@ button {
     height: auto;
   }
 }
+
+/* ── Bottom mobile nav ─────────────────────────────────── */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(15, 9, 10, 0.97);
+    border-top: 1px solid rgba(255, 223, 155, 0.14);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 4px 8px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+
+  .mobile-nav-item[aria-current="page"] {
+    color: var(--gold);
+  }
+
+  .mobile-nav-icon {
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  /* push page content above the nav bar */
+  body {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Miles' Greek Mythology Explorer",
+  "short_name": "Myth Wiki",
+  "description": "Explore Greek gods, heroes, monsters and play myth games",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f090a",
+  "theme_color": "#1a0a0b",
+  "icons": [
+    {
+      "src": "/assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
