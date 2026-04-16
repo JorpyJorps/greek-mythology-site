@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Legend Profile | Miles' Greek Mythology Explorer</title>
+    <link rel="stylesheet" href="./styles.css?v=35" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="hero profile-hero">
+        <nav class="topbar">
+          <div class="brand">
+            <span class="brand-mark">Ω</span>
+            <div>
+              <p class="eyebrow">Miles' Myth Wiki</p>
+              <h1 id="profile-name">Legend Profile</h1>
+            </div>
+          </div>
+          <div class="top-links">
+            <a href="./index.html">Home</a>
+            <a href="./games.html">Games</a>
+            <a href="./quest.html">Build A Quest</a>
+            <a href="./stats.html">Stats</a>
+          </div>
+        </nav>
+
+        <section class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow" id="profile-type">Legend</p>
+            <h2 id="profile-title">Epic profile page</h2>
+            <p class="hero-text" id="profile-summary">Story, facts, and powers for one legend.</p>
+            <div class="hero-actions">
+              <a class="button button-gold" href="./index.html">Back to Explorer</a>
+              <button class="button button-outline" type="button" id="read-aloud">Read Aloud</button>
+              <button class="button button-outline" type="button" id="favorite-profile">Star Legend</button>
+              <a class="button button-outline" href="./map.html" id="map-link">Myth Map</a>
+            </div>
+          </div>
+
+          <aside class="hero-panel profile-panel">
+            <h3>Legend details</h3>
+            <div class="detail-badges profile-badges">
+              <span id="profile-symbol">Symbol:</span>
+              <span id="profile-home">Home:</span>
+              <span id="profile-color">Legend Color:</span>
+            </div>
+          </aside>
+        </section>
+      </header>
+
+      <main class="profile-layout">
+        <section class="detail-panel mini-panel">
+          <div class="mini-header">
+            <h3 id="mini-title">Legend</h3>
+          </div>
+          <div class="mini-stage" id="mini-stage"></div>
+        </section>
+
+        <div class="profile-side-column">
+          <section class="detail-panel profile-about-panel">
+            <p class="detail-kicker">About</p>
+            <h3>Who they are</h3>
+            <p class="detail-story" id="profile-about"></p>
+          </section>
+
+          <section class="detail-panel profile-story-panel">
+            <p class="detail-kicker">Cool story</p>
+            <h3>The myth</h3>
+            <p class="detail-story" id="profile-story"></p>
+            <div class="quiz-actions">
+              <a class="button button-outline" href="./story.html#theseus-minotaur" id="profile-story-link" hidden>
+                Read Full Story
+              </a>
+            </div>
+            <div class="detail-badges profile-badges" id="monster-panel" hidden>
+              <span id="monster-danger">Danger:</span>
+              <span id="monster-size">Size:</span>
+              <span id="monster-weakness">Weakness:</span>
+            </div>
+          </section>
+
+          <section class="detail-panel profile-facts-panel">
+            <div class="detail-columns">
+              <div>
+                <h4>Fun Facts</h4>
+                <ul id="profile-facts"></ul>
+              </div>
+              <div>
+                <h4>Powers and Traits</h4>
+                <ul id="profile-powers"></ul>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="related-section">
+          <div class="section-heading">
+            <p class="eyebrow">Keep exploring</p>
+            <h2>More legends to visit next</h2>
+            <p class="hero-text" id="compare-copy">Smart picks based on family, home, or category.</p>
+          </div>
+          <div class="story-grid" id="related-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./profile.js?v=22"></script>
+  </body>
+</html>

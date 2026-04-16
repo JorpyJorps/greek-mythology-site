@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Math Quest | Miles' Greek Mythology Explorer</title>
+    <link rel="stylesheet" href="./styles.css?v=37" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="hero profile-hero">
+        <nav class="topbar">
+          <div class="brand">
+            <span class="brand-mark">Ω</span>
+            <div>
+              <p class="eyebrow">Miles' Math Quest</p>
+              <h1>Lightning Math Challenge</h1>
+            </div>
+          </div>
+          <div class="top-links">
+            <a href="./index.html">Home</a>
+            <a href="./games.html">Games</a>
+            <a href="./games.html#trivia">Trivia</a>
+            <a href="./quest.html">Build A Quest</a>
+          </div>
+        </nav>
+
+        <section class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Hero math</p>
+            <h2>Addition and multiplication with lightning power.</h2>
+            <p class="hero-text">Solve problems, build streaks, and power up.</p>
+          </div>
+
+          <aside class="hero-panel">
+            <h3>Milestones</h3>
+            <ul>
+              <li><span id="math-total-correct">0</span> total correct answers recorded</li>
+              <li><span id="math-streak">0</span> current streak</li>
+              <li>10 correct = lightning celebration</li>
+              <li>Practice and see what else unlocks</li>
+            </ul>
+          </aside>
+        </section>
+      </header>
+
+      <main class="math-layout">
+        <section class="detail-panel math-panel">
+          <div class="math-storm-flash" id="math-storm-flash" aria-hidden="true">
+            <div class="math-storm-bolt">⚡</div>
+          </div>
+          <div class="math-chest-flash" id="math-chest-flash" aria-hidden="true">
+            <div class="math-chest-card">
+              <div class="math-chest-icon">🧰</div>
+              <h3 id="math-chest-title">Secret Maze Level Unlocked</h3>
+              <p id="math-chest-copy">A new secret challenge level is ready.</p>
+            </div>
+          </div>
+
+          <div class="math-bolt-stage" id="math-bolt-stage">
+            <div class="math-bolt-wrap" aria-hidden="true">
+              <div class="math-bolt-icon" id="math-bolt-icon">⚡</div>
+              <div class="math-bolt-aura"></div>
+            </div>
+            <div>
+              <p class="detail-kicker">Lightning meter</p>
+              <h3 id="math-status-title">Spark level</h3>
+              <p class="math-subtext" id="math-status-copy">
+                Answer 10 problems correctly to charge the bolt.
+              </p>
+            </div>
+          </div>
+
+          <div class="math-power-grid">
+            <article class="math-avatar-panel">
+              <p class="card-kicker">Hero Form</p>
+              <div class="math-avatar-figure" id="math-avatar-figure">⚡</div>
+              <h3 id="math-avatar-title">Storm Starter</h3>
+              <p class="math-subtext" id="math-avatar-copy">
+                Miles is warming up his thunder powers.
+              </p>
+            </article>
+
+            <article class="math-mode-panel">
+              <p class="card-kicker">Challenge Type</p>
+              <div class="math-mode-buttons" id="math-mode-buttons">
+                <button class="button button-outline is-selected" type="button" data-mode="mixed">
+                  Mixed Review
+                </button>
+                <button class="button button-outline" type="button" data-mode="add">
+                  Addition
+                </button>
+                <button class="button button-outline" type="button" data-mode="subtract">
+                  Subtraction
+                </button>
+                <button class="button button-outline" type="button" data-mode="multiply">
+                  Multiply
+                </button>
+                <button class="button button-outline" type="button" data-mode="bonus">
+                  Super Bonus
+                </button>
+              </div>
+              <div class="math-mode-spotlight" id="math-mode-spotlight">
+                <p class="card-kicker" id="math-mode-title">Mixed Review</p>
+                <p class="math-subtext" id="math-mode-copy">
+                  Mixed Review pulls from addition, subtraction, missing numbers, doubles, make 10, and some multiplication.
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <p class="detail-kicker">Challenge</p>
+          <h2 class="math-problem" id="math-problem">8 + 7 = ?</h2>
+          <p class="math-subtext" id="math-subtext">Pick the right answer to power up the bolt.</p>
+          <div class="quiz-options math-options" id="math-options"></div>
+          <p class="quiz-feedback" id="math-feedback">A new addition question appears every round.</p>
+          <div class="quiz-actions">
+            <button class="button button-outline" type="button" id="math-next" disabled>Next Problem</button>
+            <button class="button button-outline" type="button" id="math-reset">Reset Session</button>
+          </div>
+          <div class="math-reset-confirm" id="math-reset-confirm" hidden>
+            <p>Are you sure you want to restart this session?</p>
+            <div class="quiz-actions">
+              <button class="button button-gold" type="button" id="math-reset-yes">Yes</button>
+              <button class="button button-outline" type="button" id="math-reset-no">No</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-panel math-progress-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Progress tracker</p>
+            <h2>Miles' score board</h2>
+          </div>
+          <div class="math-stats">
+            <article class="overview-card math-stat-card">
+              <p class="card-kicker">Total Right</p>
+              <h3 id="math-total-card">0</h3>
+            </article>
+            <article class="overview-card math-stat-card">
+              <p class="card-kicker">Session Right</p>
+              <h3 id="math-session-card">0</h3>
+            </article>
+            <article class="overview-card math-stat-card">
+              <p class="card-kicker">Best Streak</p>
+              <h3 id="math-best-card">0</h3>
+            </article>
+            <article class="overview-card math-stat-card">
+              <p class="card-kicker">Accuracy</p>
+              <h3 id="math-accuracy-card">0%</h3>
+            </article>
+            <article class="overview-card math-stat-card">
+              <p class="card-kicker">Math Level</p>
+              <h3 id="math-level-card">1</h3>
+            </article>
+            <article class="overview-card math-stat-card">
+              <p class="card-kicker">Streak Badge</p>
+              <h3 id="math-badge-card">Hero</h3>
+            </article>
+            <article class="overview-card math-stat-card">
+              <p class="card-kicker">Today&apos;s Run</p>
+              <h3 id="math-today-card">0</h3>
+            </article>
+            <article class="overview-card math-stat-card">
+              <p class="card-kicker">Speed Praise</p>
+              <h3 id="math-speed-card">Steady</h3>
+            </article>
+          </div>
+
+          <div class="math-secret-action" id="math-secret-action" hidden>
+            <a class="button button-gold" href="./secret-challenge.html" id="math-secret-link">
+              Secret Challenge Unlocked
+            </a>
+          </div>
+
+          <section class="math-reward-panel">
+            <div class="section-heading">
+              <p class="eyebrow">Reward Shelf</p>
+              <h2>Storm Treasures</h2>
+            </div>
+            <div class="math-reward-grid" id="math-reward-grid"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./math.js?v=22"></script>
+  </body>
+</html>

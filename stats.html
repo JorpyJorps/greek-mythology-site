@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stats | Miles' Greek Mythology Explorer</title>
+    <link rel="stylesheet" href="./styles.css?v=31" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="hero">
+        <nav class="topbar">
+          <div class="brand">
+            <span class="brand-mark">Ω</span>
+            <div>
+              <p class="eyebrow">Quiet progress board</p>
+              <h1>Miles' Site Stats</h1>
+            </div>
+          </div>
+          <div class="top-links">
+            <a href="./index.html">Home</a>
+            <a href="./games.html">Games</a>
+            <a href="./math.html">Math</a>
+            <a href="./quest.html">Build A Quest</a>
+          </div>
+        </nav>
+
+        <section class="hero-grid">
+          <div class="hero-copy">
+            <p class="hero-tagline">A simple page that keeps track of progress across the site.</p>
+          </div>
+        </section>
+      </header>
+
+      <main class="stats-page">
+        <section class="stats-grid">
+          <article class="overview-card stats-card">
+            <p class="card-kicker">Trivia</p>
+            <h3>Question stats</h3>
+            <p><strong>Total:</strong> <span id="stats-trivia-total">0</span></p>
+            <p><strong>Strongest:</strong> <span id="stats-trivia-strongest">Not enough data</span></p>
+            <p><strong>Weakest:</strong> <span id="stats-trivia-weakest">Not enough data</span></p>
+            <h4>Most missed</h4>
+            <ul class="stats-list" id="stats-missed-questions"></ul>
+          </article>
+
+          <article class="overview-card stats-card">
+            <p class="card-kicker">Math</p>
+            <h3>Math progress</h3>
+            <p><strong>Total:</strong> <span id="stats-math-total">0</span></p>
+            <p><strong>Best streak:</strong> <span id="stats-math-best-streak">0</span></p>
+            <p><strong>Hardest mode:</strong> <span id="stats-math-hardest">Not enough data</span></p>
+            <h4>Mode accuracy</h4>
+            <ul class="stats-list" id="stats-math-modes"></ul>
+          </article>
+
+          <article class="overview-card stats-card">
+            <p class="card-kicker">Build A Quest</p>
+            <h3>Reading adventure</h3>
+            <p><strong>Quests played:</strong> <span id="stats-quest-total">0</span></p>
+            <p><strong>Legend paths:</strong> <span id="stats-quest-legend">0</span></p>
+            <p><strong>Most-picked hero:</strong> <span id="stats-quest-hero">Not enough data</span></p>
+            <p><strong>Most common ending:</strong> <span id="stats-quest-ending">Not enough data</span></p>
+          </article>
+
+          <article class="overview-card stats-card">
+            <p class="card-kicker">Battle cards</p>
+            <h3>Top winners</h3>
+            <h4>Heroes</h4>
+            <ul class="stats-list" id="stats-battle-heroes"></ul>
+            <h4>Monsters</h4>
+            <ul class="stats-list" id="stats-battle-monsters"></ul>
+          </article>
+
+          <article class="overview-card stats-card">
+            <p class="card-kicker">Word search</p>
+            <h3>Search progress</h3>
+            <p><strong>Puzzles completed:</strong> <span id="stats-wordsearch-total">0</span></p>
+            <p><strong>Total words found:</strong> <span id="stats-wordsearch-words">0</span></p>
+            <p><strong>Favorite category:</strong> <span id="stats-wordsearch-favorite">Not enough data</span></p>
+          </article>
+
+          <article class="overview-card stats-card">
+            <p class="card-kicker">Memory match</p>
+            <h3>Match clears</h3>
+            <p><strong>Games completed:</strong> <span id="stats-memory-total">0</span></p>
+            <p><strong>Normal clears:</strong> <span id="stats-memory-normal">0</span></p>
+            <p><strong>Hard clears:</strong> <span id="stats-memory-hard">0</span></p>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./stats-page.js?v=1"></script>
+  </body>
+</html>

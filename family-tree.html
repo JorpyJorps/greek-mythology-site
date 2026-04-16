@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Family Tree | Miles' Greek Mythology Explorer</title>
+    <link rel="stylesheet" href="./styles.css?v=5" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="hero profile-hero">
+        <nav class="topbar">
+          <div class="brand">
+            <span class="brand-mark">Ω</span>
+            <div>
+              <p class="eyebrow">Miles' Myth Wiki</p>
+              <h1>Greek Family Tree</h1>
+            </div>
+          </div>
+          <div class="top-links">
+            <a href="./index.html">Home</a>
+            <a href="./games.html">Games</a>
+            <a href="./index.html#heroes">Heroes</a>
+            <a href="./index.html#monsters">Monsters</a>
+          </div>
+        </nav>
+
+        <section class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Family tree</p>
+            <h2 id="tree-title">Olympian Family Tree</h2>
+            <p class="hero-text" id="tree-intro">Click a card to open that legend.</p>
+            <p class="hero-text tree-note" id="tree-note"></p>
+            <div class="hero-actions">
+              <a class="button button-gold" href="./index.html">Back to Explorer</a>
+            </div>
+          </div>
+
+          <aside class="hero-panel">
+            <h3>How to use it</h3>
+            <ul>
+              <li>Start with the generations, then read the family branches below</li>
+              <li>Use the notes to spot where Greek myths have more than one version</li>
+              <li>Click any person card to open their full story page</li>
+            </ul>
+          </aside>
+        </section>
+      </header>
+
+      <main>
+        <section class="detail-panel tree-panel">
+          <div class="tree-canopy" aria-hidden="true"></div>
+          <div class="tree-board" id="tree-board"></div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./family-tree.js?v=5"></script>
+  </body>
+</html>

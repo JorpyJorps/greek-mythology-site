@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build A Quest | Miles' Greek Mythology Explorer</title>
+    <link rel="stylesheet" href="./styles.css?v=35" />
+  </head>
+  <body class="quest-page">
+    <div class="site-shell">
+      <header class="hero quest-hero">
+        <nav class="topbar quest-topbar">
+          <div class="brand">
+            <span class="brand-mark">Ω</span>
+            <div>
+              <p class="eyebrow">Story Chamber</p>
+              <h1>Build A Quest</h1>
+            </div>
+          </div>
+          <div class="top-links">
+            <a href="./index.html">Home</a>
+            <a href="./games.html">Games</a>
+            <a href="./math.html">Math</a>
+            <a href="./stats.html">Stats</a>
+          </div>
+        </nav>
+
+        <section class="hero-grid quest-hero-grid">
+          <div class="hero-copy quest-hero-copy">
+            <p class="eyebrow">Torch-lit reading</p>
+            <h2>Enter a myth chamber and read to move on.</h2>
+            <div class="hero-actions">
+              <a class="button button-gold" href="#quest-builder">Start Building</a>
+              <a class="button button-outline" href="./games.html">Back To Games</a>
+            </div>
+          </div>
+
+          <aside class="hero-panel quest-hero-panel">
+            <h3>Reading Focus</h3>
+            <ul>
+              <li>Pick a hero, place, and helper</li>
+              <li>Read each scene before you choose</li>
+              <li>The best path is closest to the real myth</li>
+              <li>Wrong turns can still lead to twists, close calls, or fails</li>
+            </ul>
+          </aside>
+        </section>
+      </header>
+
+      <main>
+        <section class="story-strip quest-build-phase" id="quest-builder">
+          <div class="section-heading">
+            <p class="eyebrow">Quest builder</p>
+            <h2>Choose the adventure parts</h2>
+            <p class="hero-text">Now with Theseus, Perseus, Heracles, Odysseus, Atalanta, and Jason.</p>
+          </div>
+
+          <div class="quest-build-shell">
+            <section class="detail-panel quest-builder-panel">
+              <div class="quest-picker-group">
+                <p class="card-kicker">Step 1</p>
+                <h3>Choose a hero</h3>
+                <div class="quest-choice-grid" id="quest-hero-grid"></div>
+              </div>
+
+              <div class="quest-picker-group">
+                <p class="card-kicker">Step 2</p>
+                <h3>Choose a place</h3>
+                <div class="quest-choice-grid" id="quest-place-grid"></div>
+              </div>
+
+              <div class="quest-picker-group">
+                <p class="card-kicker">Step 3</p>
+                <h3>Choose a helper</h3>
+                <div class="quest-choice-grid" id="quest-helper-grid"></div>
+              </div>
+
+              <div class="quiz-actions">
+                <button class="button button-gold" type="button" id="quest-start" disabled>Build My Quest</button>
+                <button class="button button-outline" type="button" id="quest-reset">Reset Picks</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="story-strip quest-read-phase" id="quest-read-phase">
+          <div class="quest-stage">
+            <div class="quest-stage-glow quest-stage-glow-left" aria-hidden="true"></div>
+            <div class="quest-stage-glow quest-stage-glow-right" aria-hidden="true"></div>
+            <div class="quest-stage-fog" aria-hidden="true"></div>
+
+            <article class="quest-chamber">
+              <div class="quest-chamber-top">
+                <div class="quest-badges" id="quest-badges">
+                  <span>Hero: -</span>
+                  <span>Place: -</span>
+                  <span>Helper: -</span>
+                </div>
+                <div class="quest-trail" id="quest-trail"></div>
+                <p class="detail-kicker quest-scene-label" id="quest-progress">Step 0 of 0</p>
+              </div>
+
+              <h2 class="quest-chamber-title" id="quest-title">Build a quest to begin.</h2>
+              <p class="quest-story-copy" id="quest-text">
+                Pick a hero, place, and helper above. Then the story chamber will open here.
+              </p>
+
+              <div class="quest-choice-stack" id="quest-choice-stack"></div>
+
+              <div class="quest-ending" id="quest-ending" hidden>
+                <p class="card-kicker" id="quest-ending-kicker">Ending</p>
+                <h3 id="quest-ending-title">Quest Complete</h3>
+                <p class="hero-text" id="quest-ending-text"></p>
+                <p class="hero-text quest-ending-epilogue" id="quest-ending-epilogue"></p>
+                <p class="quest-ending-reward" id="quest-ending-reward"></p>
+                <div class="quiz-actions">
+                  <button class="button button-gold" type="button" id="quest-replay">Play This Quest Again</button>
+                  <button class="button button-outline" type="button" id="quest-new">Build Another Quest</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./quest.js?v=9"></script>
+  </body>
+</html>
