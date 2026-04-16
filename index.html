@@ -3,268 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Miles' Greek Mythology Explorer</title>
+    <title>Miles' Myth Wiki</title>
     <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="./styles.css?v=37" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css?v=38" />
   </head>
-  <body id="top">
-    <div class="site-shell">
-      <header class="hero">
-        <nav class="topbar topbar-panorama">
-          <div class="brand">
-            <span class="brand-mark">Ω</span>
-            <div>
-              <p class="eyebrow">Miles' Myth Wiki</p>
-              <h1>Greek Mythology Explorer</h1>
-            </div>
-          </div>
-          <div class="top-links">
-            <a href="#gods">Gods</a>
-            <a href="#titans">Titans</a>
-            <a href="#heroes">Heroes</a>
-            <a href="#monsters">Monsters</a>
-            <a href="./games.html">Games</a>
-            <a href="./math.html">Math</a>
-          </div>
-        </nav>
+  <body class="page-title">
 
-        <section class="hero-grid">
-          <div class="hero-copy hero-copy-simple">
-            <p class="hero-tagline">Explore, read, play, and learn.</p>
-            <div class="hero-actions">
-              <a class="button button-gold" href="#explorer">Start Exploring</a>
-              <a class="button button-outline" href="./games.html">Play Games</a>
-              <a class="button button-outline" href="./math.html">Do Math</a>
-              <a class="button button-outline" href="./quest.html">Read Quest</a>
-            </div>
-            <div class="hero-stats">
-              <div class="hero-stat">
-                <span class="hero-stat-value" id="total-count">20</span>
-                <span class="hero-stat-label">Legends</span>
-              </div>
-              <div class="hero-stat">
-                <span class="hero-stat-value" id="god-count">12</span>
-                <span class="hero-stat-label">Gods</span>
-              </div>
-              <div class="hero-stat">
-                <span class="hero-stat-value" id="titan-count">6</span>
-                <span class="hero-stat-label">Titans</span>
-              </div>
-              <div class="hero-stat">
-                <span class="hero-stat-value" id="hero-count">7</span>
-                <span class="hero-stat-label">Heroes</span>
-              </div>
-              <div class="hero-stat">
-                <span class="hero-stat-value" id="monster-count">8</span>
-                <span class="hero-stat-label">Monsters</span>
-              </div>
-            </div>
-          </div>
-        </section>
+    <canvas class="title-stars" id="star-canvas" aria-hidden="true"></canvas>
+
+    <div class="title-screen">
+
+      <header class="title-header">
+        <span class="title-emblem" aria-hidden="true">Ω</span>
+        <h1 class="title-heading">MILES'<br>MYTH WIKI</h1>
+        <p class="title-tagline">A GREEK MYTHOLOGY ADVENTURE</p>
       </header>
 
-      <main>
-        <section class="overview">
-          <article class="overview-card search-card">
-            <p class="card-kicker">Search the wiki</p>
-            <h3>Find any legend fast</h3>
-            <input class="search-input" id="legend-search" type="search" placeholder="Search Zeus, Medusa, Titans, Olympus..." />
-            <div class="search-results" id="search-results"></div>
-          </article>
-          <article class="overview-card">
-            <p class="card-kicker">Daily quest</p>
-            <h3>Today&apos;s myth mission</h3>
-            <div id="daily-quest"></div>
-          </article>
-          <article class="overview-card">
-            <p class="card-kicker">Sound</p>
-            <h3>Myth sounds</h3>
-            <p>Optional little effects for favorites, quick views, and trivia.</p>
-            <button class="button button-outline" type="button" id="sound-toggle">Sound: Off</button>
-          </article>
-        </section>
+      <div class="bolt-badge">
+        <span aria-hidden="true">⚡</span>
+        <span id="bolt-count">0</span>
+        <span>BOLTS</span>
+      </div>
 
-        <section class="story-strip">
-          <div class="section-heading">
-            <p class="eyebrow">Favorites shelf</p>
-            <h2>Miles&apos; starred legends</h2>
-          </div>
-          <div class="story-grid" id="favorites-grid"></div>
-        </section>
+      <nav class="title-menu" aria-label="Main menu">
+        <a href="./math.html" class="title-menu-item">
+          <span class="menu-cursor" aria-hidden="true">►</span>
+          <span class="menu-icon" aria-hidden="true">⚡</span>
+          <span class="menu-text">MATH QUEST</span>
+        </a>
+        <a href="./quest.html" class="title-menu-item">
+          <span class="menu-cursor" aria-hidden="true">►</span>
+          <span class="menu-icon" aria-hidden="true">📜</span>
+          <span class="menu-text">READING QUEST</span>
+        </a>
+        <a href="./games.html" class="title-menu-item">
+          <span class="menu-cursor" aria-hidden="true">►</span>
+          <span class="menu-icon" aria-hidden="true">⚔️</span>
+          <span class="menu-text">GAMES ARENA</span>
+        </a>
+        <a href="./stats.html" class="title-menu-item">
+          <span class="menu-cursor" aria-hidden="true">►</span>
+          <span class="menu-icon" aria-hidden="true">📊</span>
+          <span class="menu-text">DAD'S STATS</span>
+        </a>
+      </nav>
 
-        <section class="overview">
-          <article class="overview-card">
-            <p class="card-kicker">What is Greek mythology?</p>
-            <h3>Stories from long ago</h3>
-            <p>
-              Greek mythology is a giant collection of tales about gods, goddesses, heroes,
-              monsters, and magical adventures. The stories helped explain nature, courage,
-              family, and the stars.
-            </p>
-          </article>
-          <article class="overview-card">
-            <p class="card-kicker">Miles' favorites</p>
-            <h3>Best places to start</h3>
-            <p>
-              Check out Zeus for thunder, Athena for wisdom, Hercules for strength, and Medusa
-              if you want a monster story that is a little spooky and a lot legendary.
-            </p>
-          </article>
-          <article class="overview-card">
-            <p class="card-kicker">Quest tip</p>
-            <h3>Tap a card below</h3>
-            <p>
-              Every card opens a full profile with powers, symbols, fun facts, and a cool story.
-              Try switching between heroes and monsters to compare them.
-            </p>
-          </article>
-        </section>
+      <p class="title-press-start" aria-hidden="true">— SELECT YOUR QUEST —</p>
 
-        <section class="explorer" id="explorer">
-          <div class="section-heading">
-            <p class="eyebrow">Interactive myth wiki</p>
-            <h2>Choose a legend to learn more</h2>
-          </div>
+      <footer class="title-footer">
+        <a href="./profile.html" class="title-quiet-link">LEGEND PROFILES</a>
+      </footer>
 
-          <div class="explorer-layout">
-            <div class="card-columns">
-              <section id="gods" class="legend-lane legend-lane-gods">
-                <div class="list-heading">
-                  <h3>Gods</h3>
-                  <p>Olympians and other major deities with giant powers and legendary stories.</p>
-                </div>
-                <div class="card-grid" id="god-grid"></div>
-              </section>
-
-              <section id="titans" class="legend-lane legend-lane-titans">
-                <div class="list-heading">
-                  <h3>Titan Hall</h3>
-                  <p>The ancient rulers and giant powers from before the Olympians.</p>
-                </div>
-                <div class="card-grid" id="titan-grid"></div>
-              </section>
-
-              <section id="heroes" class="legend-lane legend-lane-heroes">
-                <div class="list-heading">
-                  <h3>Heroes and Demigods</h3>
-                  <p>Quest leaders, monster slayers, and legendary champions.</p>
-                </div>
-                <div class="card-grid" id="hero-grid"></div>
-              </section>
-
-              <section id="monsters" class="legend-lane legend-lane-monsters">
-                <div class="list-heading">
-                  <h3>Monster Lair</h3>
-                  <p>Creatures from caves, seas, mazes, and the underworld.</p>
-                </div>
-                <div class="card-grid" id="monster-grid"></div>
-              </section>
-            </div>
-
-            <aside class="detail-panel" id="detail-panel" aria-live="polite">
-              <p class="detail-kicker" id="detail-type">Featured Legend</p>
-              <h3 id="detail-name">Zeus</h3>
-              <p class="detail-subtitle" id="detail-title">King of the gods</p>
-
-              <div class="detail-badges">
-                <span id="detail-symbol">Symbol: Thunderbolt</span>
-                <span id="detail-home">Home: Mount Olympus</span>
-                <span id="detail-color">Legend Color: Storm Gold</span>
-              </div>
-
-              <p class="detail-story" id="detail-story">
-                Zeus defeated the Titans and became the ruler of Mount Olympus, using his
-                thunderbolts to protect order and remind everyone that the sky answered to him.
-              </p>
-
-              <div class="detail-rotator">
-                <div>
-                  <p class="detail-kicker">More cool story bits</p>
-                  <h4 id="detail-slide-title">Legend Story 1</h4>
-                </div>
-                <button class="button button-outline detail-next" type="button" id="detail-next">
-                  Next
-                </button>
-              </div>
-              <p class="detail-slide-body" id="detail-slide-body">
-                Zeus won a giant battle against the Titans before ruling the sky.
-              </p>
-
-              <a class="button button-gold detail-link" id="detail-link" href="./profile.html#zeus">
-                Open Full Profile
-              </a>
-              <a class="button button-outline detail-link" id="detail-story-link" href="./story.html#theseus-minotaur" hidden>
-                Read Cool Story
-              </a>
-
-              <div class="detail-columns">
-                <div>
-                  <h4>Fun Facts</h4>
-                  <ul id="detail-facts"></ul>
-                </div>
-                <div>
-                  <h4>Powers and Traits</h4>
-                  <ul id="detail-powers"></ul>
-                </div>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <section class="story-strip">
-          <div class="section-heading">
-            <p class="eyebrow">Cool stories</p>
-            <h2>Stories to read next</h2>
-          </div>
-          <div class="story-grid" id="story-grid"></div>
-        </section>
-
-        <section class="story-strip">
-          <div class="section-heading">
-            <p class="eyebrow">Reward track</p>
-            <h2>Coming up next</h2>
-          </div>
-          <div class="story-grid" id="sticker-grid"></div>
-        </section>
-
-        <section class="math-promo">
-          <div class="section-heading">
-            <p class="eyebrow">Next adventure</p>
-            <h2>Pick where to go next</h2>
-          </div>
-          <div class="story-grid">
-            <article class="story-card math-promo-card">
-              <h3>Games Arena</h3>
-              <p>Trivia, battle cards, memory, and word search.</p>
-              <a class="button button-outline" href="./games.html">Play Games</a>
-            </article>
-            <article class="story-card math-promo-card">
-              <h3>Build A Quest</h3>
-              <p>Read a short myth adventure and choose what happens next.</p>
-              <a class="button button-outline" href="./quest.html">Read Quest</a>
-            </article>
-            <article class="story-card math-promo-card">
-              <h3>Math Quest</h3>
-              <p>Solve math problems, build streaks, and unlock the secret maze.</p>
-              <a class="button button-outline" href="./math.html">Do Math</a>
-            </article>
-            <article class="story-card math-promo-card">
-              <h3>Stats</h3>
-              <p>See progress across trivia, math, quests, battle cards, and more.</p>
-              <a class="button button-outline" href="./stats.html">See Stats</a>
-            </article>
-          </div>
-        </section>
-
-        <div class="page-return">
-          <a class="button button-outline" href="#top">Back To Top</a>
-          <a class="quiet-link" href="./family-tree.html">Family Tree</a>
-          <a class="quiet-link" href="./stats.html">Stats</a>
-        </div>
-      </main>
     </div>
 
-    <script type="module" src="./script.js?v=15"></script>
     <script src="/nav.js"></script>
+    <script type="module" src="./script.js?v=16"></script>
   </body>
 </html>
