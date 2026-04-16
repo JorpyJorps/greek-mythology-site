@@ -749,7 +749,7 @@ button {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
   gap: 1.25rem;
 }
 
@@ -2570,5 +2570,31 @@ button {
   .quest-story-copy {
     font-size: 1.15rem;
     max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .button {
+    padding: 14px 20px;
+    min-height: 44px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .wordsearch-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .wordsearch-cell {
+    font-size: 0.85rem;
+    border-radius: 8px;
+  }
+
+  .secret-canvas {
+    aspect-ratio: 1;
+    height: auto;
   }
 }
