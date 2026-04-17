@@ -2933,6 +2933,19 @@ body.page-math {
 }
 .math-back:hover { color: var(--gold); }
 
+.home-btn {
+  font-size: 0.5rem;
+  gap: 6px;
+  color: var(--gold);
+  border: 1px solid rgba(243, 201, 105, 0.3);
+  border-radius: 6px;
+  padding: 8px 14px;
+}
+.home-btn:hover {
+  background: rgba(243, 201, 105, 0.1);
+  border-color: var(--gold);
+}
+
 .math-bolt-hud {
   font-size: 0.65rem;
   color: var(--gold);
