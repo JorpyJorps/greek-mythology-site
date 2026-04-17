@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css?v=44" />
+    <link rel="stylesheet" href="./styles.css?v=45" />
   </head>
   <body class="page-math">
 
@@ -41,8 +41,11 @@
 
       <!-- question area -->
       <main class="math-arena">
-        <div class="math-skill-symbol pixel" id="math-skill-symbol">+</div>
-        <h1 class="math-problem pixel" id="math-problem">? + ? = ?</h1>
+        <div class="math-level-row">
+          <div class="math-level-badge pixel" id="math-level-badge">LVL 1</div>
+          <button class="math-level-up pixel" id="math-level-up" type="button" title="Level up">▲</button>
+        </div>
+        <div class="math-problem" id="math-problem"></div>
         <div class="math-options" id="math-options"></div>
         <p class="math-feedback pixel" id="math-feedback" aria-live="polite">&nbsp;</p>
       </main>
@@ -58,6 +61,6 @@
     </div>
 
     <script src="/nav.js"></script>
-    <script type="module" src="./math.js?v=25"></script>
+    <script type="module" src="./math.js?v=26"></script>
   </body>
 </html>

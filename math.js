@@ -1,9 +1,10 @@
 import { recordMathAnswer } from "./stats.js";
 
 // ── Storage keys ──────────────────────────────────────────
-const STORAGE_KEY   = "miles-math-progress";
-const BOLT_KEY      = "miles-bolts";
+const STORAGE_KEY    = "miles-math-progress";
+const BOLT_KEY       = "miles-bolts";
 const EASTER_EGG_KEY = "secret-maze-easter-egg";
+const LEVEL_KEY      = "miles-math-level-override";
 
 // ── Constants ─────────────────────────────────────────────
 const DAILY_BOLT_CAP    = 20;   // max bolts earnable from math per day
@@ -16,7 +17,8 @@ const STREAK_DISPLAY    = 5;    // dots shown in streak HUD
 const mathProblem    = document.querySelector("#math-problem");
 const mathOptions    = document.querySelector("#math-options");
 const mathFeedback   = document.querySelector("#math-feedback");
-const mathSkillSymbol = document.querySelector("#math-skill-symbol");
+const mathLevelBadge = document.querySelector("#math-level-badge");
+const mathLevelUp    = document.querySelector("#math-level-up");
 const mathStormFlash = document.querySelector("#math-storm-flash");
 const mathChestFlash = document.querySelector("#math-chest-flash");
 const mathChestTitle = document.querySelector("#math-chest-title");
@@ -86,12 +88,22 @@ function addBolt() {
 }
 
 // ── Adaptive difficulty ───────────────────────────────────
-function getMathLevel() {
+function getAutoLevel() {
   if (progress.totalCorrect >= 160) return 5;
   if (progress.totalCorrect >= 80)  return 4;
   if (progress.totalCorrect >= 40)  return 3;
   if (progress.totalCorrect >= 15)  return 2;
   return 1;
+}
+
+function getMathLevel() {
+  const override = parseInt(localStorage.getItem(LEVEL_KEY) || "0", 10);
+  return (override >= 1 && override <= 5) ? override : getAutoLevel();
+}
+
+function isLevelOverridden() {
+  const override = parseInt(localStorage.getItem(LEVEL_KEY) || "0", 10);
+  return override >= 1 && override <= 5;
 }
 
 function getUnlockedSecretTier() {
@@ -139,6 +151,7 @@ function buildSubtraction(level) {
 function buildMissingNumber(level) {
   const base = buildAddition(Math.max(1, level - 1));
   return { operator:"+", left:base.left, right:base.right, answer:base.right,
+           type:"missing", equationResult:base.answer,
            prompt:`${base.left} + ? = ${base.answer}`, key:`miss:${base.left}+?=${base.answer}` };
 }
 
@@ -205,6 +218,13 @@ function renderStreak() {
     "●".repeat(streak) + "○".repeat(STREAK_DISPLAY - streak);
 }
 
+function renderLevelBadge() {
+  if (!mathLevelBadge) return;
+  const level = getMathLevel();
+  const overridden = isLevelOverridden();
+  mathLevelBadge.textContent = overridden ? `LVL ${level} ★` : `LVL ${level}`;
+}
+
 function renderDailyBar() {
   const pct = Math.min(100, (progress.dailyBoltsEarned / DAILY_BOLT_CAP) * 100);
   dailyFill.style.width = `${pct}%`;
@@ -219,6 +239,7 @@ function renderHud() {
   if (boltCountEl) boltCountEl.textContent = String(getStoredBolts());
   renderStreak();
   renderDailyBar();
+  renderLevelBadge();
 }
 
 function showLightningFlash() {
@@ -238,8 +259,20 @@ function renderProblem() {
   currentProblem = buildProblem();
   answered = false;
 
-  mathSkillSymbol.textContent = currentProblem.operator;
-  mathProblem.textContent = currentProblem.prompt;
+  // ── vertical school-style layout ──
+  const isMissing = currentProblem.type === "missing";
+  const midNum  = isMissing ? "?" : String(currentProblem.right);
+  const ansLine = isMissing ? String(currentProblem.equationResult) : "?";
+  mathProblem.innerHTML = `
+    <div class="math-vert-top">${currentProblem.left}</div>
+    <div class="math-vert-mid">
+      <span class="math-vert-op">${currentProblem.operator}</span>
+      <span class="math-vert-num">${midNum}</span>
+    </div>
+    <div class="math-vert-line"></div>
+    <div class="math-vert-ans${isMissing ? "" : " is-blank"}">${ansLine}</div>
+  `;
+
   mathFeedback.textContent = "\u00A0";
   mathFeedback.className = "math-feedback pixel";
   mathOptions.innerHTML = "";
@@ -314,6 +347,28 @@ function handleAnswer(option, btn) {
 }
 
 // ── Init ───────────────────────────────────────────────────
+
+// Level override button — tap to bump up, wraps back to auto after 5
+if (mathLevelUp) {
+  mathLevelUp.addEventListener("click", () => {
+    const curr = getMathLevel();
+    const overridden = isLevelOverridden();
+    if (!overridden) {
+      // first tap: lock at current auto level + 1
+      const next = Math.min(5, curr + 1);
+      localStorage.setItem(LEVEL_KEY, String(next));
+    } else if (curr < 5) {
+      localStorage.setItem(LEVEL_KEY, String(curr + 1));
+    } else {
+      // already at 5, reset to auto
+      localStorage.removeItem(LEVEL_KEY);
+    }
+    renderHud();
+    recentProblemKeys = []; // fresh problems at new level
+    renderProblem();
+  });
+}
+
 renderHud();
 renderProblem();
 

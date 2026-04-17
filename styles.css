@@ -2908,9 +2908,6 @@ body.page-math {
     gap: 12px;
     padding: 12px 0;
   }
-  .math-skill-symbol {
-    font-size: clamp(1.4rem, 6vw, 2rem);
-  }
   .math-options {
     gap: 8px;
   }
@@ -2985,25 +2982,102 @@ body.page-math {
   padding: 20px 0;
 }
 
-.math-skill-symbol {
-  font-size: clamp(2rem, 8vw, 3.5rem);
-  color: rgba(243, 201, 105, 0.35);
-  line-height: 1;
-  letter-spacing: 0;
+/* level row */
+.math-level-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.math-problem {
-  font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
-  font-size: clamp(2.2rem, 9vw, 4rem);
-  font-weight: 700;
+.math-level-badge {
+  font-size: 0.55rem;
+  color: rgba(243, 201, 105, 0.55);
+  letter-spacing: 0.12em;
+}
+
+.math-level-up {
+  font-size: 0.45rem;
+  color: rgba(243, 201, 105, 0.4);
+  background: none;
+  border: 1px solid rgba(243, 201, 105, 0.2);
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  line-height: 1;
+}
+.math-level-up:hover {
   color: var(--gold);
-  text-shadow:
-    0 0 16px rgba(243, 201, 105, 0.45),
-    3px 3px 0 rgba(70, 15, 8, 0.9);
-  line-height: 1.3;
+  border-color: rgba(243, 201, 105, 0.6);
+}
+
+/* vertical school-style problem */
+.math-problem {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
   margin: 0;
+}
+
+/* shared font across all rows */
+.math-vert-top,
+.math-vert-op,
+.math-vert-num,
+.math-vert-ans {
+  font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+  font-size: clamp(2.4rem, 10vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* top number — right-aligned, indented by operator column width */
+.math-vert-top {
+  color: var(--gold);
+  text-shadow: 0 0 16px rgba(243,201,105,0.45), 3px 3px 0 rgba(70,15,8,0.9);
+  text-align: right;
+  padding-left: 2.6rem; /* same as operator column */
+}
+
+/* operator row: [op fixed] [number flex right] */
+.math-vert-mid {
+  display: flex;
+  align-items: baseline;
+}
+
+.math-vert-op {
+  width: 2.6rem;
+  flex-shrink: 0;
   text-align: center;
-  letter-spacing: 0.04em;
+  color: rgba(243, 201, 105, 0.55);
+}
+
+.math-vert-num {
+  flex: 1;
+  text-align: right;
+  color: var(--gold);
+  text-shadow: 0 0 16px rgba(243,201,105,0.45), 3px 3px 0 rgba(70,15,8,0.9);
+}
+
+/* horizontal line */
+.math-vert-line {
+  border: none;
+  border-top: 3px solid rgba(243, 201, 105, 0.55);
+  margin: 6px 0 4px;
+  width: 100%;
+}
+
+/* answer row — right-aligned, same indent */
+.math-vert-ans {
+  color: var(--gold);
+  text-shadow: 0 0 16px rgba(243,201,105,0.45), 3px 3px 0 rgba(70,15,8,0.9);
+  text-align: right;
+  padding-left: 2.6rem;
+}
+
+/* dimmed ? for "what is the answer" slot */
+.math-vert-ans.is-blank {
+  color: rgba(243, 201, 105, 0.38);
+  text-shadow: none;
 }
 
 .math-options {
