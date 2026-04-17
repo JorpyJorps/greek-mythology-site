@@ -1,10 +1,21 @@
-const BOLT_KEY = 'miles-bolts';
+const BOLT_KEY   = 'miles-bolts';
+const SCROLL_KEY = 'miles-scrolls';
 
-// Bolt counter display
-const boltEl = document.getElementById('bolt-count');
-if (boltEl) {
-  boltEl.textContent = localStorage.getItem(BOLT_KEY) || '0';
-}
+// Currency display
+const boltEl   = document.getElementById('bolt-count');
+const scrollEl = document.getElementById('scroll-count');
+if (boltEl)   boltEl.textContent   = localStorage.getItem(BOLT_KEY)   || '0';
+if (scrollEl) scrollEl.textContent = localStorage.getItem(SCROLL_KEY) || '0';
+
+// Lightning flash on menu selection
+const flash = document.getElementById('title-flash');
+document.querySelectorAll('.title-menu-item').forEach(link => {
+  link.addEventListener('click', () => {
+    if (!flash) return;
+    flash.classList.remove('is-active');
+    requestAnimationFrame(() => flash.classList.add('is-active'));
+  });
+});
 
 // Animated star field
 const canvas = document.getElementById('star-canvas');
@@ -12,7 +23,7 @@ if (canvas) {
   const ctx = canvas.getContext('2d');
 
   function resize() {
-    canvas.width = window.innerWidth;
+    canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
   }
   resize();

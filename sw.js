@@ -1,55 +1,36 @@
-const CACHE = 'myth-wiki-v1';
+// Network-first service worker — always fetches fresh, falls back to cache offline.
+// Bump CACHE version any time you want to wipe the old cache entirely.
+const CACHE = 'myth-wiki-v4';
 
-const PRECACHE = [
-  '/',
-  '/index.html',
-  '/games.html',
-  '/math.html',
-  '/quest.html',
-  '/profile.html',
-  '/stats.html',
-  '/story.html',
-  '/family-tree.html',
-  '/compare.html',
-  '/map.html',
-  '/secret-challenge.html',
-  '/trophy-room.html',
-  '/styles.css',
-  '/script.js',
-  '/games.js',
-  '/math.js',
-  '/quest.js',
-  '/profile.js',
-  '/stats.js',
-  '/stats-page.js',
-  '/story.js',
-  '/family-tree.js',
-  '/compare.js',
-  '/map.js',
-  '/secret-challenge.js',
-  '/trophy-room.js',
-  '/data.js',
-  '/quest-data.js',
-  '/nav.js',
-  '/manifest.json',
-];
-
+// On install: take over immediately, no waiting
 self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())
-  );
+  self.skipWaiting();
 });
 
+// On activate: delete every old cache, claim all tabs instantly
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then(keys => Promise.all(keys.map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
 
+// Fetch: try network first, fall back to cache for offline
 self.addEventListener('fetch', e => {
+  // Only handle GET requests for same-origin resources
+  if (e.request.method !== 'GET') return;
+
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request)
+      .then(response => {
+        // Cache a copy for offline fallback
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE).then(cache => cache.put(e.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });

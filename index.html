@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css?v=38" />
+    <link rel="stylesheet" href="./styles.css?v=40" />
   </head>
   <body class="page-title">
 
@@ -22,10 +22,19 @@
         <p class="title-tagline">A GREEK MYTHOLOGY ADVENTURE</p>
       </header>
 
-      <div class="bolt-badge">
-        <span aria-hidden="true">⚡</span>
-        <span id="bolt-count">0</span>
-        <span>BOLTS</span>
+      <div class="title-currency-row">
+        <div class="bolt-badge">
+          <span aria-hidden="true">⚡</span>
+          <span id="bolt-count">0</span>
+        </div>
+        <div class="bolt-badge bolt-badge-scroll">
+          <span aria-hidden="true">📜</span>
+          <span id="scroll-count">0</span>
+        </div>
+      </div>
+
+      <div class="title-flash" id="title-flash" aria-hidden="true">
+        <div class="title-flash-bolt">⚡</div>
       </div>
 
       <nav class="title-menu" aria-label="Main menu">
@@ -60,6 +69,6 @@
     </div>
 
     <script src="/nav.js"></script>
-    <script type="module" src="./script.js?v=16"></script>
+    <script type="module" src="./script.js?v=17"></script>
   </body>
 </html>

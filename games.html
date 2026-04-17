@@ -3,274 +3,172 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Games | Miles' Greek Mythology Explorer</title>
+    <title>Games Arena | Miles' Myth Wiki</title>
     <link rel="manifest" href="/manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./styles.css?v=33" />
+    <link rel="stylesheet" href="./styles.css?v=40" />
   </head>
-  <body>
-    <div class="math-storm-flash" id="memory-storm-flash" aria-hidden="true">
+  <body class="page-games">
+
+    <!-- flash effect shared across games -->
+    <div class="math-storm-flash" id="games-flash" aria-hidden="true">
       <div class="math-storm-bolt">⚡</div>
     </div>
-    <div class="site-shell">
-      <header class="hero">
-        <nav class="topbar">
-          <div class="brand">
-            <span class="brand-mark">Ω</span>
-            <div>
-              <p class="eyebrow">Miles' Myth Games</p>
-              <h1>Games Arena</h1>
-            </div>
-          </div>
-          <div class="top-links">
-            <a href="./index.html">Home</a>
-            <a href="./quest.html">Build A Quest</a>
-            <a href="./math.html">Math</a>
-            <a href="#trivia">Trivia</a>
-            <a href="#battle-cards">Battle Cards</a>
-            <a href="#memory-game">Memory Match</a>
-            <a href="#word-search">Word Search</a>
-          </div>
-        </nav>
 
-        <section class="hero-grid">
-          <div class="hero-copy">
-            <p class="eyebrow">Myth games</p>
-            <h2>Play, guess, battle, and match.</h2>
-            <div class="hero-actions">
-              <a class="button button-gold" href="#trivia">Play Trivia</a>
-              <a class="button button-outline" href="./quest.html">Read Quest</a>
-              <a class="button button-outline" href="#battle-cards">Battle Cards</a>
-              <a class="button button-outline" href="#memory-game">Memory Match</a>
-              <a class="button button-outline" href="./math.html">Do Math</a>
-            </div>
-          </div>
+    <!-- ── GAME PICKER ─────────────────────────── -->
+    <section class="games-picker" id="games-picker">
+      <nav class="games-topbar">
+        <a href="/index.html" class="math-back pixel">◀</a>
+        <div class="games-hud-counts pixel">
+          ⚡ <span id="picker-bolts">0</span>
+          &nbsp;&nbsp;
+          📜 <span id="picker-scrolls">0</span>
+        </div>
+      </nav>
+      <h1 class="quest-picker-title pixel">GAMES ARENA</h1>
+      <div class="games-grid">
+        <button class="game-tile" data-game="trivia">
+          <span class="game-tile-icon">⚡</span>
+          <span class="game-tile-name pixel">TRIVIA</span>
+          <span class="game-tile-earn pixel">earns ⚡</span>
+        </button>
+        <button class="game-tile" data-game="memory">
+          <span class="game-tile-icon">🧠</span>
+          <span class="game-tile-name pixel">MEMORY</span>
+          <span class="game-tile-earn pixel">earns ⚡</span>
+        </button>
+        <button class="game-tile" data-game="battle">
+          <span class="game-tile-icon">⚔️</span>
+          <span class="game-tile-name pixel">BATTLE</span>
+          <span class="game-tile-earn pixel">earns ⚡</span>
+        </button>
+        <button class="game-tile" data-game="wordsearch">
+          <span class="game-tile-icon">🔎</span>
+          <span class="game-tile-name pixel">WORDS</span>
+          <span class="game-tile-earn pixel">earns 📜</span>
+        </button>
+      </div>
+    </section>
 
-          <aside class="hero-panel">
-            <h3>Inside the arena</h3>
-            <ul>
-              <li>Random 10-question trivia rounds by level and category</li>
-              <li>Build-a-quest reading adventures with choices and endings</li>
-              <li>Hero vs. monster battle cards with quick results</li>
-              <li>A face-down memory matching game with myth legends</li>
-              <li>Fast links back to Math Quest and the main wiki</li>
-            </ul>
-          </aside>
-        </section>
-      </header>
+    <!-- ── TRIVIA ───────────────────────────────── -->
+    <section class="game-panel" id="panel-trivia" hidden>
+      <nav class="games-topbar">
+        <button class="math-back pixel" id="back-trivia" type="button">◀</button>
+        <div class="quest-step-hud pixel" id="trivia-progress">1 / 10</div>
+        <div class="math-bolt-hud pixel">⚡ <span id="trivia-bolt-count">0</span></div>
+      </nav>
+      <div class="math-arena trivia-arena">
+        <div class="math-skill-symbol pixel" id="trivia-cat-tag">?</div>
+        <p class="trivia-question" id="trivia-question">Loading…</p>
+        <div class="trivia-options" id="trivia-options"></div>
+        <p class="math-feedback pixel" id="trivia-feedback" aria-live="polite">&nbsp;</p>
+      </div>
+      <footer class="math-footer">
+        <div class="math-daily-track">
+          <div class="math-daily-fill" id="trivia-bolt-fill"></div>
+        </div>
+        <p class="math-daily-label pixel" id="trivia-bolt-label">0 BOLTS TODAY</p>
+      </footer>
+    </section>
 
-      <main>
-        <section class="story-strip">
-          <div class="section-heading">
-            <p class="eyebrow">Arcade hub</p>
-            <h2>Pick a game lane</h2>
-          </div>
-          <div class="arcade-grid">
-            <article class="arcade-card arcade-card-trivia">
-              <div class="arcade-icon" aria-hidden="true">⚡</div>
-              <p class="card-kicker">Quiz lane</p>
-              <h3>Trivia Arena</h3>
-              <p>Random rounds, level picks, and category buttons for gods, heroes, monsters, and places.</p>
-              <div class="arcade-tags">
-                <span>Random 10</span>
-                <span>Level 1 + 2</span>
-                <span>Category play</span>
-              </div>
-              <a class="button button-gold" href="#trivia">Play Trivia</a>
-            </article>
+    <!-- ── MEMORY MATCH ────────────────────────── -->
+    <section class="game-panel" id="panel-memory" hidden>
+      <nav class="games-topbar">
+        <button class="math-back pixel" id="back-memory" type="button">◀</button>
+        <div class="quest-step-hud pixel" id="memory-status">MEMORY MATCH</div>
+        <div class="math-bolt-hud pixel">⚡ <span id="memory-bolt-count">0</span></div>
+      </nav>
+      <div class="memory-controls">
+        <div class="game-cat-row">
+          <button class="game-cat-btn pixel is-selected" type="button" data-memory-level="normal">4×4</button>
+          <button class="game-cat-btn pixel" type="button" data-memory-level="hard">6×4</button>
+        </div>
+        <button class="button button-outline pixel" type="button" id="memory-reset">NEW GAME</button>
+      </div>
+      <div class="memory-grid" id="memory-grid"></div>
+    </section>
 
-            <article class="arcade-card arcade-card-battle">
-              <div class="arcade-icon" aria-hidden="true">🛡️</div>
-              <p class="card-kicker">Battle lane</p>
-              <h3>Monster Battle Cards</h3>
-              <p>Pick a hero, pick a monster, and see who would probably win the showdown.</p>
-              <div class="arcade-tags">
-                <span>Hero vs Monster</span>
-                <span>Quick result</span>
-                <span>Random match</span>
-              </div>
-              <a class="button button-gold" href="#battle-cards">Open Battle Cards</a>
-            </article>
+    <!-- ── BATTLE CARDS ────────────────────────── -->
+    <section class="game-panel" id="panel-battle" hidden>
+      <nav class="games-topbar">
+        <button class="math-back pixel" id="back-battle" type="button">◀</button>
+        <span class="quest-step-hud pixel" id="battle-phase-label">BATTLE</span>
+        <div class="math-bolt-hud pixel">⚡ <span id="battle-bolt-count">0</span></div>
+      </nav>
 
-            <article class="arcade-card arcade-card-memory">
-              <div class="arcade-icon" aria-hidden="true">🧠</div>
-              <p class="card-kicker">Match lane</p>
-              <h3>Memory Match</h3>
-              <p>Flip cards face down, remember what you saw, and clear the whole board.</p>
-              <div class="arcade-tags">
-                <span>Face-down cards</span>
-                <span>Classic match play</span>
-                <span>New board anytime</span>
-              </div>
-              <a class="button button-gold" href="#memory-game">Play Memory Match</a>
-            </article>
+      <!-- ── Pick screen ── -->
+      <div class="bp-select" id="bp-select">
+        <p class="pixel bp-pick-hint">CHOOSE YOUR HERO</p>
+        <div class="bp-hero-grid" id="bp-hero-grid"></div>
+        <p class="pixel bp-pick-hint bp-pick-hint-vs" id="bp-vs-hint" hidden>VS — CHOOSE YOUR FOE</p>
+        <div class="bp-monster-grid" id="bp-monster-grid" hidden></div>
+        <button class="button button-gold pixel bp-go-btn" id="bp-go-btn" hidden>FIGHT!</button>
+      </div>
 
-            <article class="arcade-card arcade-card-wordsearch">
-              <div class="arcade-icon" aria-hidden="true">🔎</div>
-              <p class="card-kicker">Search lane</p>
-              <h3>Word Search</h3>
-              <p>Find Greek gods, heroes, and monsters hidden in a letter puzzle.</p>
-              <div class="arcade-tags">
-                <span>Mixed or category</span>
-                <span>New puzzle anytime</span>
-                <span>Reading + spelling</span>
-              </div>
-              <a class="button button-gold" href="#word-search">Play Word Search</a>
-            </article>
+      <!-- ── Fight screen ── -->
+      <div class="bp-fight" id="bp-fight" hidden>
 
-            <article class="arcade-card arcade-card-quest">
-              <div class="arcade-icon" aria-hidden="true">📖</div>
-              <p class="card-kicker">Story lane</p>
-              <h3>Build A Quest</h3>
-              <p>Pick a hero, place, and helper, then read your way through a short myth adventure.</p>
-              <div class="arcade-tags">
-                <span>Reading practice</span>
-                <span>Choice story</span>
-                <span>Legend path</span>
-              </div>
-              <a class="button button-gold" href="./quest.html">Open Build A Quest</a>
-            </article>
+        <div class="bp-enemy-row">
+          <div class="bp-name-bar">
+            <span class="pixel bp-cname" id="bp-enemy-name">—</span>
+            <div class="bp-hp-track"><div class="bp-hp-fill" id="bp-enemy-hp-fill"></div></div>
+            <span class="pixel bp-hp-num" id="bp-enemy-hp-num">—</span>
+          </div>
+          <div class="bp-sprite bp-sprite-enemy" id="bp-enemy-sprite" aria-hidden="true"></div>
+        </div>
 
-            <article class="arcade-card arcade-card-math">
-              <div class="arcade-icon" aria-hidden="true">➕</div>
-              <p class="card-kicker">Power lane</p>
-              <h3>Math Quest</h3>
-              <p>Lightning math, streaks, rewards, and the hidden maze path all live here.</p>
-              <div class="arcade-tags">
-                <span>Add + Multiply</span>
-                <span>Rewards</span>
-                <span>Secret challenge</span>
-              </div>
-              <a class="button button-outline" href="./math.html">Open Math Quest</a>
-            </article>
+        <div class="bp-hero-row">
+          <div class="bp-sprite bp-sprite-hero" id="bp-hero-sprite" aria-hidden="true"></div>
+          <div class="bp-name-bar bp-name-bar-hero">
+            <span class="pixel bp-cname" id="bp-hero-name">—</span>
+            <div class="bp-hp-track"><div class="bp-hp-fill bp-hp-fill-hero" id="bp-hero-hp-fill"></div></div>
+            <span class="pixel bp-hp-num" id="bp-hero-hp-num">—</span>
           </div>
+        </div>
 
-          <div class="overview arcade-mini-links">
-            <article class="overview-card">
-              <p class="card-kicker">Back to the wiki</p>
-              <h3>Main explorer</h3>
-              <p>Jump back to gods, titans, heroes, monsters, and full profile pages.</p>
-              <a class="button button-outline" href="./index.html">Go Home</a>
-            </article>
-            <article class="overview-card">
-              <p class="card-kicker">Quick combo</p>
-              <h3>One good run</h3>
-              <p>Start with trivia, battle a monster, then finish with one memory round.</p>
-            </article>
-            <article class="overview-card">
-              <p class="card-kicker">Scroll too</p>
-              <h3>Everything below works</h3>
-              <p>Each game section is still fully playable if you want to scroll instead of jump.</p>
-            </article>
-          </div>
-        </section>
+        <div class="bp-msgbox retro-box" id="bp-msgbox">
+          <p class="bp-msg" id="bp-msg">What will your hero do?</p>
+        </div>
 
-        <section class="trivia-section" id="trivia">
-          <div class="section-heading">
-            <p class="eyebrow">Trivia challenge</p>
-            <h2>Pick a level and a category</h2>
-            <p class="hero-text">Every round gives you a random 10 questions.</p>
-          </div>
-          <div class="quiz-levels">
-            <button class="button button-outline is-selected" type="button" data-level="level1">Level 1</button>
-            <button class="button button-outline" type="button" data-level="level2">Level 2</button>
-          </div>
-          <div class="quiz-levels" id="trivia-categories">
-            <button class="button button-outline is-selected" type="button" data-category="all">All</button>
-            <button class="button button-outline" type="button" data-category="gods">Gods</button>
-            <button class="button button-outline" type="button" data-category="heroes">Heroes</button>
-            <button class="button button-outline" type="button" data-category="monsters">Monsters</button>
-            <button class="button button-outline" type="button" data-category="places">Places</button>
-          </div>
-          <div class="quiz-shell">
-            <article class="trivia-card quiz-card" id="quiz-card"></article>
-          </div>
-        </section>
+        <div class="bp-moves" id="bp-moves"></div>
 
-        <section class="story-strip" id="battle-cards">
-          <div class="section-heading">
-            <p class="eyebrow">Monster battle cards</p>
-            <h2>Pick a hero and a monster</h2>
-            <p class="hero-text">See who would probably win and why.</p>
-          </div>
-          <div class="battle-shell">
-            <article class="detail-panel battle-panel">
-              <div class="battle-controls">
-                <label class="battle-field">
-                  <span>Hero</span>
-                  <select id="battle-hero"></select>
-                </label>
-                <label class="battle-field">
-                  <span>Monster</span>
-                  <select id="battle-monster"></select>
-                </label>
-              </div>
-              <div class="quiz-actions">
-                <button class="button button-gold" type="button" id="battle-run">Battle!</button>
-                <button class="button button-outline" type="button" id="battle-random">Random Match</button>
-              </div>
-            </article>
-            <article class="detail-panel battle-result" id="battle-result">
-              <p class="detail-kicker">Battle result</p>
-              <h3>Choose a match-up</h3>
-              <p class="hero-text">Pick a hero and a monster to see the battle card.</p>
-            </article>
-          </div>
-        </section>
+        <div class="bp-end-actions" id="bp-end-actions" hidden>
+          <button class="button button-gold pixel" type="button" id="bp-rematch">REMATCH!</button>
+          <button class="button button-outline pixel" type="button" id="bp-new-match">NEW MATCH</button>
+        </div>
 
-        <section class="story-strip" id="memory-game">
-          <div class="section-heading">
-            <p class="eyebrow">Memory match</p>
-            <h2>Flip the cards and find the pairs</h2>
-            <p class="hero-text">Pick a board size, then match the myth cards by memory.</p>
-          </div>
-          <div class="memory-shell">
-            <div class="quiz-levels" id="memory-levels">
-              <button class="button button-outline is-selected" type="button" data-memory-level="normal">4 x 4</button>
-              <button class="button button-outline" type="button" data-memory-level="hard">6 x 4</button>
-            </div>
-            <div class="quiz-actions">
-              <button class="button button-gold" type="button" id="memory-reset">New Game</button>
-            </div>
-            <p class="hero-text" id="memory-status">Find all the matching pairs.</p>
-            <div class="memory-grid" id="memory-grid"></div>
-          </div>
-        </section>
+      </div>
+    </section>
 
-        <section class="story-strip" id="word-search">
-          <div class="section-heading">
-            <p class="eyebrow">Word search</p>
-            <h2>Find the hidden myth names</h2>
-            <p class="hero-text">Pick a category, then scan the puzzle for the names in the list.</p>
-          </div>
-          <div class="wordsearch-shell">
-            <article class="detail-panel wordsearch-panel">
-              <div class="quiz-levels" id="wordsearch-categories">
-                <button class="button button-outline is-selected" type="button" data-wordsearch-category="mixed">Mixed</button>
-                <button class="button button-outline" type="button" data-wordsearch-category="gods">Gods</button>
-                <button class="button button-outline" type="button" data-wordsearch-category="heroes">Heroes</button>
-                <button class="button button-outline" type="button" data-wordsearch-category="monsters">Monsters</button>
-              </div>
-              <div class="quiz-actions">
-                <button class="button button-gold" type="button" id="wordsearch-reset">New Puzzle</button>
-              </div>
-              <p class="hero-text" id="wordsearch-status">Find all the names in the grid.</p>
-              <div class="wordsearch-grid" id="wordsearch-grid" aria-label="Greek mythology word search puzzle"></div>
-            </article>
+    <!-- ── WORD SEARCH ─────────────────────────── -->
+    <section class="game-panel" id="panel-wordsearch" hidden>
+      <nav class="games-topbar">
+        <button class="math-back pixel" id="back-wordsearch" type="button">◀</button>
+        <div class="quest-step-hud pixel" id="wordsearch-status">FIND ALL 6</div>
+        <div class="math-bolt-hud pixel">📜 <span id="wordsearch-scroll-count">0</span></div>
+      </nav>
+      <div class="wordsearch-controls">
+        <div class="game-cat-row" id="wordsearch-categories">
+          <button class="game-cat-btn pixel is-selected" type="button" data-wordsearch-category="mixed">ALL</button>
+          <button class="game-cat-btn pixel" type="button" data-wordsearch-category="gods">GODS</button>
+          <button class="game-cat-btn pixel" type="button" data-wordsearch-category="heroes">HEROES</button>
+          <button class="game-cat-btn pixel" type="button" data-wordsearch-category="monsters">BEASTS</button>
+        </div>
+        <button class="button button-outline pixel" type="button" id="wordsearch-reset">NEW PUZZLE</button>
+      </div>
+      <div class="wordsearch-shell">
+        <article class="wordsearch-panel">
+          <div class="wordsearch-grid" id="wordsearch-grid" aria-label="Word search puzzle"></div>
+        </article>
+        <article class="wordsearch-side">
+          <div class="wordsearch-list" id="wordsearch-list"></div>
+        </article>
+      </div>
+    </section>
 
-            <article class="detail-panel wordsearch-side">
-              <p class="detail-kicker">Find these words</p>
-              <h3>Hidden myth names</h3>
-              <div class="wordsearch-list" id="wordsearch-list"></div>
-            </article>
-          </div>
-        </section>
-      </main>
-    </div>
-
-    <script type="module" src="./games.js?v=19"></script>
     <script src="/nav.js"></script>
+    <script type="module" src="./games.js?v=21"></script>
   </body>
 </html>
