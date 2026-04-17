@@ -18,7 +18,7 @@
 - [ ] **Show don't tell** — if we can't figure out the UI without reading text, redesign it
 - [ ] **Both currencies matter** — every new activity earns either ⚡ Bolts or 📜 Scrolls (not neither)
 - [ ] **Daily caps on everything** — no single activity can be farmed all day
-- [ ] **Pixel font (Press Start 2P) for headings/UI only** — body text uses readable font
+- [ ] **Pixel font (Press Start 2P) for headings/UI only** — body text, questions, answer buttons, and anything Miles reads or taps uses Trebuchet MS (the body font). Never put pixel font on content.
 - [ ] **Maroon + gold always** — `--bg: #120506`, `--gold: #f3c969`
 - [ ] **Bump CSS version** in the HTML page when styles.css changes (`?v=XX`)
 - [ ] **Bump JS version** in the HTML page when a JS file changes (`?v=XX`)
