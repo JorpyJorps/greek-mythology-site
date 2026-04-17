@@ -2917,15 +2917,19 @@ body.page-math {
 }
 
 .math-back {
-  font-size: 0.55rem;
+  font-size: 1rem;
   color: var(--muted);
   text-decoration: none;
   letter-spacing: 0.08em;
-  padding: 8px 10px;
-  min-height: 40px;
+  padding: 10px 16px;
+  min-height: 48px;
+  min-width: 48px;
   display: flex;
   align-items: center;
   transition: color 0.15s;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 .math-back:hover { color: var(--gold); }
 
