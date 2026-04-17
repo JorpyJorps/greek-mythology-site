@@ -3010,3 +3010,248 @@ body.page-math {
   margin: 0;
   text-align: center;
 }
+
+/* ── Quest screen ─────────────────────────────────────── */
+body.page-quest {
+  min-height: 100vh;
+}
+
+.quest-screen {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.quest-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.quest-step-hud {
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* ── Hero picker ─────────────────────────────────────── */
+.quest-picker {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.quest-picker-title {
+  font-size: clamp(0.7rem, 2.5vw, 1rem);
+  color: var(--gold);
+  text-align: center;
+  margin: 28px 0 20px;
+  letter-spacing: 0.08em;
+  text-shadow: 2px 2px 0 rgba(70, 15, 8, 0.9);
+}
+
+.quest-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+}
+
+.quest-hero-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 12px 16px;
+  background: rgba(42, 12, 18, 0.88);
+  border: 2px solid rgba(243, 201, 105, 0.2);
+  color: var(--cream);
+  cursor: pointer;
+  transition: border-color 0.1s, background 0.1s;
+  min-height: 110px;
+}
+
+.quest-hero-card:hover,
+.quest-hero-card:focus-visible {
+  border-color: var(--gold);
+  background: rgba(243, 201, 105, 0.1);
+  outline: none;
+}
+
+.quest-hero-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.quest-hero-name {
+  font-size: 0.6rem;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+}
+
+.quest-hero-sub {
+  font-family: "Trebuchet MS", sans-serif;
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.4;
+  font-weight: normal;
+}
+
+/* ── Reading chamber ─────────────────────────────────── */
+.quest-reader {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.quest-chamber {
+  position: relative;
+  flex: 1;
+  padding: 28px 24px 32px;
+  margin: 16px 0 calc(16px + env(safe-area-inset-bottom));
+  background: rgba(28, 10, 12, 0.85);
+  border: 2px solid rgba(243, 201, 105, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(243, 201, 105, 0.06), 4px 4px 0 rgba(70, 15, 8, 0.6);
+  overflow: hidden;
+}
+
+.quest-chamber-title {
+  font-size: clamp(0.55rem, 2vw, 0.8rem);
+  color: var(--gold);
+  margin: 0 0 20px;
+  letter-spacing: 0.06em;
+  text-shadow: 2px 2px 0 rgba(70, 15, 8, 0.9);
+}
+
+.quest-story-copy {
+  font-family: Georgia, serif;
+  font-size: clamp(1rem, 2.8vw, 1.2rem);
+  line-height: 1.75;
+  color: var(--cream);
+  margin: 0 0 28px;
+}
+
+.quest-choice-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quest-story-choice {
+  display: block;
+  width: 100%;
+  padding: 16px 18px;
+  background: rgba(42, 12, 18, 0.9);
+  border: 2px solid rgba(243, 201, 105, 0.22);
+  color: var(--cream);
+  font-family: Georgia, serif;
+  font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+  text-align: left;
+  cursor: pointer;
+  line-height: 1.5;
+  transition: border-color 0.1s, background 0.1s, color 0.1s;
+  min-height: 52px;
+}
+
+.quest-story-choice:hover,
+.quest-story-choice:focus-visible {
+  border-color: var(--gold);
+  background: rgba(243, 201, 105, 0.1);
+  color: var(--gold);
+  outline: none;
+}
+
+/* ── Ending ──────────────────────────────────────────── */
+.quest-ending {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quest-ending-kicker {
+  font-size: 0.55rem;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin: 0;
+}
+
+.quest-ending-title {
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 0;
+}
+
+.quest-ending-text,
+.quest-ending-epilogue {
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--cream);
+  margin: 0;
+}
+
+.quest-end-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.quest-end-actions .button {
+  font-size: 0.5rem;
+  padding: 14px 18px;
+}
+
+/* ── Scroll earn flash ───────────────────────────────── */
+.quest-scroll-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.quest-scroll-flash.is-active {
+  opacity: 1;
+}
+
+.quest-scroll-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 40px;
+  animation: scroll-pop 2s ease forwards;
+}
+
+.quest-scroll-icon {
+  font-size: 3rem;
+}
+
+.quest-scroll-card .pixel {
+  font-size: 1rem;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+}
+
+@keyframes scroll-pop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  15%  { transform: scale(1.08); opacity: 1; }
+  30%  { transform: scale(1); }
+  70%  { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0; }
+}

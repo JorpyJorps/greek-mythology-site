@@ -1,293 +1,205 @@
-import { questCatalog, questHeroes, questPlaces, questHelpers, getQuestBySelection } from "./quest-data.js?v=2";
+import { questCatalog } from "./quest-data.js";
 import { recordQuestEnding } from "./stats.js";
 
-const heroGrid = document.querySelector("#quest-hero-grid");
-const placeGrid = document.querySelector("#quest-place-grid");
-const helperGrid = document.querySelector("#quest-helper-grid");
-const startButton = document.querySelector("#quest-start");
-const resetButton = document.querySelector("#quest-reset");
-const replayButton = document.querySelector("#quest-replay");
-const newButton = document.querySelector("#quest-new");
-const badges = document.querySelector("#quest-badges");
-const trail = document.querySelector("#quest-trail");
-const progressLabel = document.querySelector("#quest-progress");
-const titleLabel = document.querySelector("#quest-title");
-const textLabel = document.querySelector("#quest-text");
-const choiceStack = document.querySelector("#quest-choice-stack");
-const endingPanel = document.querySelector("#quest-ending");
-const endingKicker = document.querySelector("#quest-ending-kicker");
-const endingTitle = document.querySelector("#quest-ending-title");
-const endingText = document.querySelector("#quest-ending-text");
+// ── Storage ────────────────────────────────────────────────
+const SCROLL_KEY = "miles-scrolls";
+
+// ── Hero metadata for the picker ──────────────────────────
+const HERO_META = {
+  theseus:  { icon: "🧵", label: "THESEUS" },
+  perseus:  { icon: "🛡️", label: "PERSEUS" },
+  hercules: { icon: "💪", label: "HERACLES" },
+  odysseus: { icon: "⚓", label: "ODYSSEUS" },
+  atalanta: { icon: "🏹", label: "ATALANTA" },
+  jason:    { icon: "🐏", label: "JASON" },
+};
+
+// ── Scroll rewards by ending type ─────────────────────────
+const SCROLL_REWARDS = {
+  "legend-path": 5,   // followed the real myth — best reward
+  "win":         3,
+  "close":       3,
+  "twist":       2,
+  "fail":        1,   // still earns something
+};
+
+// ── DOM refs ──────────────────────────────────────────────
+const pickerEl      = document.querySelector("#quest-picker");
+const readerEl      = document.querySelector("#quest-reader");
+const heroGrid      = document.querySelector("#quest-hero-grid");
+const questTitle    = document.querySelector("#quest-title");
+const questText     = document.querySelector("#quest-text");
+const choiceStack   = document.querySelector("#quest-choice-stack");
+const endingPanel   = document.querySelector("#quest-ending");
+const endingKicker  = document.querySelector("#quest-ending-kicker");
+const endingTitle   = document.querySelector("#quest-ending-title");
+const endingText    = document.querySelector("#quest-ending-text");
 const endingEpilogue = document.querySelector("#quest-ending-epilogue");
-const endingReward = document.querySelector("#quest-ending-reward");
-const buildPhase = document.querySelector(".quest-build-phase");
-const readPhase = document.querySelector(".quest-read-phase");
+const stepHud       = document.querySelector("#quest-step-hud");
+const backBtn       = document.querySelector("#quest-back-btn");
+const replayBtn     = document.querySelector("#quest-replay");
+const newBtn        = document.querySelector("#quest-new");
+const scrollFlash   = document.querySelector("#quest-scroll-flash");
+const scrollMsg     = document.querySelector("#quest-scroll-msg");
+const scrollCountPicker = document.querySelector("#scroll-count-picker");
+const scrollCountReader = document.querySelector("#scroll-count-reader");
 
-let selectedHero = "";
-let selectedPlace = "";
-let selectedHelper = "";
-let activeQuest = null;
-let activeNode = null;
-let currentStepIndex = 0;
-let totalStorySteps = 0;
-let choiceHistory = [];
+// ── State ─────────────────────────────────────────────────
+let activeQuest   = null;
+let activeNode    = null;
+let stepIndex     = 0;
+let totalSteps    = 0;
 
-function setQuestPhase(phase) {
-  document.body.dataset.questPhase = phase;
-  buildPhase.hidden = phase === "read";
-  readPhase.hidden = false;
+// ── Scroll helpers ────────────────────────────────────────
+function getScrolls() {
+  return parseInt(localStorage.getItem(SCROLL_KEY) || "0", 10);
 }
 
-function getAvailableQuestForHero(heroId) {
-  return questCatalog.find((quest) => quest.hero === heroId);
+function addScrolls(n) {
+  const total = getScrolls() + n;
+  localStorage.setItem(SCROLL_KEY, String(total));
+  renderScrollHud();
+  showScrollFlash(n);
 }
 
-function getAvailableSelectionIds(heroId) {
-  const quest = getAvailableQuestForHero(heroId);
-  if (!quest) {
-    return { placeId: "", helperId: "" };
-  }
-
-  return { placeId: quest.place, helperId: quest.helper };
+function renderScrollHud() {
+  const n = String(getScrolls());
+  if (scrollCountPicker) scrollCountPicker.textContent = n;
+  if (scrollCountReader) scrollCountReader.textContent = n;
 }
 
-function updateBadges() {
-  const heroLabel = questHeroes.find((item) => item.id === selectedHero)?.label || "-";
-  const placeLabel = questPlaces.find((item) => item.id === selectedPlace)?.label || "-";
-  const helperLabel = questHelpers.find((item) => item.id === selectedHelper)?.label || "-";
-
-  badges.innerHTML = `
-    <span>Hero: ${heroLabel}</span>
-    <span>Place: ${placeLabel}</span>
-    <span>Helper: ${helperLabel}</span>
-  `;
+function showScrollFlash(n) {
+  if (!scrollFlash) return;
+  scrollMsg.textContent = `+${n} SCROLL${n !== 1 ? "S" : ""}!`;
+  scrollFlash.classList.remove("is-active");
+  requestAnimationFrame(() => scrollFlash.classList.add("is-active"));
+  setTimeout(() => scrollFlash.classList.remove("is-active"), 2000);
 }
 
-function renderTrail() {
-  if (!trail) return;
-  if (!choiceHistory.length) {
-    trail.innerHTML = "";
-    trail.hidden = true;
+// ── Phase switching ───────────────────────────────────────
+function showPicker() {
+  pickerEl.hidden = false;
+  readerEl.hidden = true;
+  activeQuest = null;
+  activeNode  = null;
+  renderScrollHud();
+}
+
+function showReader() {
+  pickerEl.hidden = true;
+  readerEl.hidden = false;
+  renderScrollHud();
+}
+
+// ── Picker ────────────────────────────────────────────────
+function renderPicker() {
+  heroGrid.innerHTML = "";
+  questCatalog.forEach(quest => {
+    const meta = HERO_META[quest.hero] || { icon: "⚡", label: quest.hero.toUpperCase() };
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "quest-hero-card pixel";
+    btn.innerHTML = `
+      <span class="quest-hero-icon">${meta.icon}</span>
+      <span class="quest-hero-name">${meta.label}</span>
+      <span class="quest-hero-sub">${quest.title}</span>
+    `;
+    btn.addEventListener("click", () => startQuest(quest));
+    heroGrid.appendChild(btn);
+  });
+}
+
+// ── Quest logic ───────────────────────────────────────────
+function getNode(id) {
+  if (activeQuest.start.id === id) return activeQuest.start;
+  return activeQuest.steps?.find(s => s.id === id) || null;
+}
+
+function getEnding(id) {
+  return activeQuest.endings?.find(e => e.id === id) || null;
+}
+
+function startQuest(quest) {
+  activeQuest = quest;
+  totalSteps  = quest.sceneCount || (quest.steps?.length || 0) + 1;
+  stepIndex   = 0;
+  activeNode  = quest.start;
+  endingPanel.hidden = true;
+  showReader();
+  renderNode();
+}
+
+function renderNode() {
+  endingPanel.hidden = true;
+  choiceStack.innerHTML = "";
+  questTitle.textContent = activeQuest.title.toUpperCase();
+  questText.textContent  = activeNode.text;
+  stepHud.textContent    = `${stepIndex + 1} / ${totalSteps}`;
+
+  activeNode.choices.forEach(choice => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "quest-story-choice";
+    btn.textContent = choice.label;
+    btn.addEventListener("click", () => handleChoice(choice));
+    choiceStack.appendChild(btn);
+  });
+}
+
+function handleChoice(choice) {
+  const next = choice.next;
+  const node = getNode(next);
+  if (node) {
+    activeNode = node;
+    stepIndex += 1;
+    renderNode();
     return;
   }
-
-  trail.hidden = false;
-  trail.innerHTML = choiceHistory
-    .map(
-      (item, index) => `<span class="quest-trail-chip">${index + 1}. ${item}</span>`
-    )
-    .join("");
-}
-
-function createChoiceButton(item, selectedId, onSelect, disabled = false) {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "quest-choice-card";
-  button.textContent = item.label;
-  button.disabled = disabled;
-  button.classList.toggle("is-selected", item.id === selectedId);
-  if (disabled) {
-    button.classList.add("is-disabled");
-  }
-  button.addEventListener("click", () => onSelect(item.id));
-  return button;
-}
-
-function renderHeroChoices() {
-  heroGrid.innerHTML = "";
-  questHeroes.forEach((hero) => {
-    heroGrid.appendChild(
-      createChoiceButton(hero, selectedHero, (heroId) => {
-        selectedHero = heroId;
-        const available = getAvailableSelectionIds(heroId);
-        selectedPlace = available.placeId;
-        selectedHelper = available.helperId;
-        activeQuest = null;
-        renderSelections();
-      })
-    );
-  });
-}
-
-function renderPlaceChoices() {
-  placeGrid.innerHTML = "";
-  const available = getAvailableSelectionIds(selectedHero);
-
-  questPlaces.forEach((place) => {
-    const disabled = !selectedHero || place.id !== available.placeId;
-    placeGrid.appendChild(
-      createChoiceButton(
-        place,
-        selectedPlace,
-        (placeId) => {
-          selectedPlace = placeId;
-          renderSelections();
-        },
-        disabled
-      )
-    );
-  });
-}
-
-function renderHelperChoices() {
-  helperGrid.innerHTML = "";
-  const available = getAvailableSelectionIds(selectedHero);
-
-  questHelpers.forEach((helper) => {
-    const disabled = !selectedHero || helper.id !== available.helperId;
-    helperGrid.appendChild(
-      createChoiceButton(
-        helper,
-        selectedHelper,
-        (helperId) => {
-          selectedHelper = helperId;
-          renderSelections();
-        },
-        disabled
-      )
-    );
-  });
-}
-
-function renderSelections() {
-  renderHeroChoices();
-  renderPlaceChoices();
-  renderHelperChoices();
-  updateBadges();
-
-  const validQuest = getQuestBySelection(selectedHero, selectedPlace, selectedHelper);
-  startButton.disabled = !validQuest;
-
-  if (!activeQuest) {
-    progressLabel.textContent = "Step 0 of 0";
-    titleLabel.textContent = validQuest ? validQuest.title : "Build a quest to begin.";
-    textLabel.textContent = validQuest
-      ? validQuest.summary
-      : "Pick a hero, place, and helper on the left. Then the story will begin here.";
-    choiceStack.innerHTML = "";
-    choiceHistory = [];
-    renderTrail();
-    endingPanel.hidden = true;
-    setQuestPhase("build");
-  }
-}
-
-function getStoryNode(quest, nodeId) {
-  if (quest.start.id === nodeId) return quest.start;
-  return quest.steps.find((step) => step.id === nodeId) || null;
-}
-
-function getEnding(quest, endingId) {
-  return quest.endings.find((ending) => ending.id === endingId) || null;
-}
-
-function getEndingKicker(result, mythTrue) {
-  if (mythTrue) return "Legend Path";
-  if (result === "win") return "Hero Win";
-  if (result === "close") return "Close Call";
-  if (result === "twist") return "Twist Ending";
-  return "Try Again";
+  const ending = getEnding(next);
+  if (ending) showEnding(ending);
 }
 
 function showEnding(ending) {
   recordQuestEnding({
     hero: activeQuest.hero,
     result: ending.result,
-    mythTrue: Boolean(ending.mythTrue)
+    mythTrue: Boolean(ending.mythTrue),
   });
-  progressLabel.textContent = `Step ${totalStorySteps} of ${totalStorySteps}`;
-  titleLabel.textContent = activeQuest.title;
-  textLabel.textContent = "Quest complete.";
+
   choiceStack.innerHTML = "";
+  questText.textContent = "";
+  stepHud.textContent   = `${totalSteps} / ${totalSteps}`;
+
+  const kicker = ending.mythTrue ? "★ LEGEND PATH" :
+    ending.result === "win"   ? "HERO WIN"   :
+    ending.result === "close" ? "CLOSE CALL" :
+    ending.result === "twist" ? "TWIST"      : "TRY AGAIN";
+
+  endingKicker.textContent   = kicker;
+  endingTitle.textContent    = ending.title || "";
+  endingText.textContent     = ending.text  || "";
+  if (ending.epilogue) {
+    endingEpilogue.textContent = ending.epilogue;
+    endingEpilogue.hidden = false;
+  } else {
+    endingEpilogue.hidden = true;
+  }
+
   endingPanel.hidden = false;
-  endingKicker.textContent = getEndingKicker(ending.result, ending.mythTrue);
-  endingTitle.textContent = ending.title;
-  endingText.textContent = ending.text;
-  endingEpilogue.textContent = ending.epilogue || "";
-  endingReward.textContent = ending.reward || "";
-  endingEpilogue.hidden = !ending.epilogue;
-  endingReward.hidden = !ending.reward;
-  renderTrail();
+
+  // earn scrolls
+  const resultKey = ending.mythTrue ? "legend-path" : (ending.result || "fail");
+  const earned = SCROLL_REWARDS[resultKey] ?? 1;
+  addScrolls(earned);
 }
 
-function renderStoryNode() {
-  endingPanel.hidden = true;
-  progressLabel.textContent = `Step ${currentStepIndex + 1} of ${totalStorySteps}`;
-  titleLabel.textContent = activeQuest.title;
-  textLabel.textContent = activeNode.text;
-  choiceStack.innerHTML = "";
+// ── Controls ──────────────────────────────────────────────
+backBtn.addEventListener("click", showPicker);
+replayBtn.addEventListener("click", () => {
+  if (activeQuest) startQuest(activeQuest);
+});
+newBtn.addEventListener("click", showPicker);
 
-  activeNode.choices.forEach((choice) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "quiz-option quest-story-choice";
-    button.textContent = choice.label;
-    button.addEventListener("click", () => {
-      choiceHistory = [...choiceHistory, choice.label];
-      const nextNode = getStoryNode(activeQuest, choice.next);
-      if (nextNode) {
-        activeNode = nextNode;
-        currentStepIndex += 1;
-        renderTrail();
-        renderStoryNode();
-        return;
-      }
-
-      const ending = getEnding(activeQuest, choice.next);
-      if (ending) {
-        showEnding(ending);
-      }
-    });
-    choiceStack.appendChild(button);
-  });
-}
-
-function startQuest() {
-  activeQuest = getQuestBySelection(selectedHero, selectedPlace, selectedHelper);
-  if (!activeQuest) {
-    return;
-  }
-
-  totalStorySteps = activeQuest.sceneCount || activeQuest.steps.length + 1;
-  currentStepIndex = 0;
-  activeNode = activeQuest.start;
-  choiceHistory = [];
-  renderTrail();
-  setQuestPhase("read");
-  readPhase.scrollIntoView({ behavior: "smooth", block: "start" });
-  renderStoryNode();
-}
-
-function resetSelections() {
-  selectedHero = "";
-  selectedPlace = "";
-  selectedHelper = "";
-  activeQuest = null;
-  activeNode = null;
-  currentStepIndex = 0;
-  totalStorySteps = 0;
-  choiceHistory = [];
-  renderSelections();
-}
-
-function replayQuest() {
-  if (!activeQuest) {
-    return;
-  }
-
-  totalStorySteps = activeQuest.sceneCount || activeQuest.steps.length + 1;
-  currentStepIndex = 0;
-  activeNode = activeQuest.start;
-  choiceHistory = [];
-  renderTrail();
-  setQuestPhase("read");
-  renderStoryNode();
-}
-
-startButton.addEventListener("click", startQuest);
-resetButton.addEventListener("click", resetSelections);
-replayButton.addEventListener("click", replayQuest);
-newButton.addEventListener("click", resetSelections);
-
-setQuestPhase("build");
-renderSelections();
+// ── Init ──────────────────────────────────────────────────
+renderPicker();
+showPicker();
