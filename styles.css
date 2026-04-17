@@ -2962,14 +2962,17 @@ body.page-math {
 }
 
 .math-problem {
-  font-size: clamp(1.6rem, 7vw, 3rem);
+  font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+  font-size: clamp(2.2rem, 9vw, 4rem);
+  font-weight: 700;
   color: var(--gold);
   text-shadow:
     0 0 16px rgba(243, 201, 105, 0.45),
     3px 3px 0 rgba(70, 15, 8, 0.9);
-  line-height: 1.4;
+  line-height: 1.3;
   margin: 0;
   text-align: center;
+  letter-spacing: 0.04em;
 }
 
 .math-options {
@@ -2981,8 +2984,9 @@ body.page-math {
 }
 
 .math-choice {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(0.9rem, 3vw, 1.3rem);
+  font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+  font-size: clamp(1.3rem, 4.5vw, 1.9rem);
+  font-weight: 700;
   padding: 18px 12px;
   min-height: 64px;
   background: rgba(42, 12, 18, 0.9);
@@ -3428,9 +3432,11 @@ body.page-games {
 }
 
 .trivia-question {
-  font-size: clamp(0.85rem, 3.5vw, 1.1rem);
+  font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+  font-size: clamp(1rem, 3.5vw, 1.25rem);
+  font-weight: 600;
   color: var(--cream);
-  line-height: 1.7;
+  line-height: 1.65;
   text-align: center;
   max-width: 480px;
   margin: 0;
