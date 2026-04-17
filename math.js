@@ -6,8 +6,9 @@ const BOLT_KEY      = "miles-bolts";
 const EASTER_EGG_KEY = "secret-maze-easter-egg";
 
 // ── Constants ─────────────────────────────────────────────
-const DAILY_BOLT_CAP    = 50;   // max bolts earnable from math per day
-const MILESTONE_TEN     = 10;   // lightning flash every N correct
+const DAILY_BOLT_CAP    = 20;   // max bolts earnable from math per day
+const BOLT_EVERY        = 10;   // earn 1 bolt every N correct answers
+const MILESTONE_TEN     = 10;   // lightning flash every N correct (same as BOLT_EVERY)
 const MILESTONE_UNLOCK  = 40;   // correct today → unlock maze
 const STREAK_DISPLAY    = 5;    // dots shown in streak HUD
 
@@ -208,9 +209,10 @@ function renderDailyBar() {
   const pct = Math.min(100, (progress.dailyBoltsEarned / DAILY_BOLT_CAP) * 100);
   dailyFill.style.width = `${pct}%`;
   const capped = progress.dailyBoltsEarned >= DAILY_BOLT_CAP;
+  const toNext = BOLT_EVERY - (progress.dailyCorrect % BOLT_EVERY);
   dailyLabel.textContent = capped
-    ? `⚡ ${progress.dailyBoltsEarned} BOLTS — KEEP GOING!`
-    : `⚡ ${progress.dailyBoltsEarned} BOLTS TODAY`;
+    ? `⚡ ${progress.dailyBoltsEarned} BOLTS TODAY`
+    : `⚡ ${progress.dailyBoltsEarned} BOLTS  •  ${toNext} TO NEXT`;
 }
 
 function renderHud() {
@@ -268,7 +270,8 @@ function handleAnswer(option, btn) {
     progress.currentStreak += 1;
     progress.bestStreak = Math.max(progress.bestStreak, progress.currentStreak);
     sessionCorrect += 1;
-    addBolt();
+    // earn 1 bolt every BOLT_EVERY correct answers
+    if (progress.dailyCorrect % BOLT_EVERY === 0) addBolt();
   } else {
     progress.currentStreak = 0;
   }
