@@ -6,7 +6,7 @@ const BOLT_KEY      = "miles-bolts";
 const EASTER_EGG_KEY = "secret-maze-easter-egg";
 
 // ── Constants ─────────────────────────────────────────────
-const DAILY_BOLT_CAP    = 20;   // max bolts earnable from math per day
+const DAILY_BOLT_CAP    = 50;   // max bolts earnable from math per day
 const MILESTONE_TEN     = 10;   // lightning flash every N correct
 const MILESTONE_UNLOCK  = 40;   // correct today → unlock maze
 const STREAK_DISPLAY    = 5;    // dots shown in streak HUD
@@ -209,8 +209,8 @@ function renderDailyBar() {
   dailyFill.style.width = `${pct}%`;
   const capped = progress.dailyBoltsEarned >= DAILY_BOLT_CAP;
   dailyLabel.textContent = capped
-    ? `MAX BOLTS TODAY ⚡`
-    : `${progress.dailyBoltsEarned} / ${DAILY_BOLT_CAP} BOLTS TODAY`;
+    ? `⚡ ${progress.dailyBoltsEarned} BOLTS — KEEP GOING!`
+    : `⚡ ${progress.dailyBoltsEarned} BOLTS TODAY`;
 }
 
 function renderHud() {
@@ -300,8 +300,14 @@ function handleAnswer(option, btn) {
     mathFeedback.classList.add(correct ? "is-correct" : "is-wrong");
   }
 
-  // auto-advance after a short delay
-  setTimeout(() => renderProblem(), correct ? 900 : 1400);
+  // clear button colors before advancing so they don't bleed into next question
+  const advanceDelay = correct ? 900 : 1400;
+  setTimeout(() => {
+    mathOptions.querySelectorAll(".math-choice").forEach(b => {
+      b.classList.remove("is-correct", "is-wrong");
+    });
+  }, advanceDelay - 200);
+  setTimeout(() => renderProblem(), advanceDelay);
 }
 
 // ── Init ───────────────────────────────────────────────────

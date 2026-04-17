@@ -2904,6 +2904,20 @@ body.page-math {
     min-height: calc(100vh - 64px - env(safe-area-inset-bottom));
     padding-bottom: 16px;
   }
+  .math-arena {
+    gap: 12px;
+    padding: 12px 0;
+  }
+  .math-skill-symbol {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
+  .math-options {
+    gap: 8px;
+  }
+  .math-choice {
+    padding: 14px 8px;
+    min-height: 54px;
+  }
 }
 
 /* top bar */
