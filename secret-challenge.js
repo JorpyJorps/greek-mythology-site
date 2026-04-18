@@ -1,722 +1,602 @@
-const STORAGE_KEY = "miles-math-progress";
-const UNLOCK_TOTAL = 40;
-const EASTER_EGG_KEY = "secret-maze-easter-egg";
+"use strict";
 
-const LEVELS = [
-  {
-    name: "Level 1",
-    subtitle: "First hedge maze",
-    minotaurSpeed: 1,
-    rows: [
-      "############",
-      "#S..#......#",
-      "#.#.#.####.#",
-      "#.#...#....#",
-      "#.###.#.##.#",
-      "#...#.#.#..#",
-      "###.#.#.#.##",
-      "#...#...#..#",
-      "#.#####.##.#",
-      "#.....#....#",
-      "#.###.####.#",
-      "#...#.....E#"
-    ],
-    minotaurStart: { row: 10, col: 1 }
-  },
-  {
-    name: "Level 2",
-    subtitle: "Twisty grove",
-    minotaurSpeed: 1,
-    rows: [
-      "############",
-      "#S#...#....#",
-      "#.#.#.#.##.#",
-      "#...#...#..#",
-      "###.###.#.##",
-      "#.....#.#..#",
-      "#.###.#.##.#",
-      "#.#...#....#",
-      "#.#.#####.##",
-      "#...#......#",
-      "#.#######..#",
-      "#.........E#"
-    ],
-    minotaurStart: { row: 9, col: 10 }
-  },
-  {
-    name: "Level 3",
-    subtitle: "Royal maze",
-    minotaurSpeed: 1,
-    rows: [
-      "############",
-      "#S........##",
-      "###.#####..#",
-      "#...#...#..#",
-      "#.###.#.#.##",
-      "#.....#.#..#",
-      "#.#####.#..#",
-      "#.#.....##.#",
-      "#.#.###....#",
-      "#...#..###.#",
-      "###.#......#",
-      "#.........E#"
-    ],
-    minotaurStart: { row: 10, col: 1 }
-  },
-  {
-    name: "Level 4",
-    subtitle: "Minotaur champion",
-    minotaurSpeed: 1,
-    rows: [
-      "############",
-      "#S.......#.#",
-      "###.####.#.#",
-      "#...#....#.#",
-      "#.###.##.#.#",
-      "#.....##.#.#",
-      "#.######.#.#",
-      "#.#......#.#",
-      "#.#.######.#",
-      "#...#......#",
-      "###.#.####.#",
-      "#.........E#"
-    ],
-    minotaurStart: { row: 10, col: 1 }
-  }
+// ── Custom sprite slots ────────────────────────────────────
+// To swap in art made in ChatGPT, do:
+//   const img = new Image(); img.src = '/assets/theseus.png'; playerImg = img;
+let playerImg   = null;
+let minotaurImg = null;
+let relicImg    = null;
+
+// ── Storage ────────────────────────────────────────────────
+const STORAGE_KEY  = "miles-math-progress";
+const MAZE_LVL_KEY = "miles-maze-level";
+const EASTER_KEY   = "secret-maze-easter-egg";
+const UNLOCK_DAILY = 40;
+
+// ── Difficulty config (10 levels) ─────────────────────────
+const PLAYER_SPEED = 4.2;   // tiles / second
+const BASE_M_SPD   = 2.3;   // minotaur base speed
+const WAKE_SECS    = 2.2;   // seconds before minotaur starts moving
+
+//          passages  speedMult  relics  theme
+const LVLS = [
+  { p: 9,  sm: 1.00, rel: 3, th: 0 }, // 1
+  { p: 9,  sm: 1.13, rel: 3, th: 0 }, // 2
+  { p: 9,  sm: 1.27, rel: 3, th: 0 }, // 3
+  { p:11,  sm: 1.42, rel: 4, th: 1 }, // 4
+  { p:11,  sm: 1.58, rel: 4, th: 1 }, // 5
+  { p:11,  sm: 1.75, rel: 4, th: 1 }, // 6
+  { p:13,  sm: 1.93, rel: 5, th: 2 }, // 7
+  { p:13,  sm: 2.12, rel: 5, th: 2 }, // 8
+  { p:13,  sm: 2.32, rel: 5, th: 2 }, // 9
+  { p:15,  sm: 2.50, rel: 6, th: 3 }, // 10
 ];
 
-const TILE_SIZE = 44;
-const WALL = "#";
-const START = "S";
-const EXIT = "E";
+const THEMES = [
+  { label:"HEDGE LABYRINTH",    wall:"#1e4a18", wallHi:"#2d6022", fg:"#0f1e0c", accent:"#f3c969" },
+  { label:"ANCIENT RUINS",      wall:"#4a3a1e", wallHi:"#5e4c28", fg:"#1a1108", accent:"#f3c969" },
+  { label:"DEEP DUNGEON",       wall:"#1a2440", wallHi:"#263258", fg:"#08090f", accent:"#88b8ff" },
+  { label:"MINOTAUR'S CHAMBER", wall:"#5c0f0f", wallHi:"#781818", fg:"#100404", accent:"#ff8c42" },
+];
 
-const lockedPanel = document.querySelector("#secret-locked-panel");
-const lockedTitle = document.querySelector("#secret-locked-title");
-const lockedCopy = document.querySelector("#secret-locked-copy");
-const gamePanel = document.querySelector("#secret-game-panel");
-const canvas = document.querySelector("#secret-canvas");
-const restartButton = document.querySelector("#secret-restart");
-const statusLabel = document.querySelector("#secret-status");
-const movesLabel = document.querySelector("#secret-moves");
-const correctCountLabel = document.querySelector("#secret-correct-count");
-const levelLabel = document.querySelector("#secret-level");
-const relicsLabel = document.querySelector("#secret-relics");
-const livesLabel = document.querySelector("#secret-lives");
-const timerLabel = document.querySelector("#secret-timer");
-const tipLabel = document.querySelector("#secret-tip");
-const banner = document.querySelector("#secret-banner");
-const bannerTitle = document.querySelector("#secret-banner-title");
-const bannerCopy = document.querySelector("#secret-banner-copy");
+// ── DOM refs ───────────────────────────────────────────────
+const canvas     = document.querySelector("#maze-canvas");
+const ctx        = canvas.getContext("2d");
+const overlayEl  = document.querySelector("#maze-overlay");
+const oIconEl    = document.querySelector("#maze-o-icon");
+const oTitleEl   = document.querySelector("#maze-o-title");
+const oMsgEl     = document.querySelector("#maze-o-msg");
+const oBtnEl     = document.querySelector("#maze-o-btn");
+const oBtn2El    = document.querySelector("#maze-o-btn2");
+const hudLvlEl   = document.querySelector("#maze-hud-level");
+const hudLivEl   = document.querySelector("#maze-hud-lives");
+const hudRelEl   = document.querySelector("#maze-hud-relics");
+const hudStatEl  = document.querySelector("#maze-hud-status");
+const dpadEl     = document.querySelector("#maze-dpad");
 
-const context = canvas.getContext("2d");
-context.imageSmoothingEnabled = false;
-
-let easterEggMode = false;
-let moveCount = 0;
-let gameState = "playing";
-let player = { row: 0, col: 0 };
-let minotaur = { row: 0, col: 0 };
-let exitTile = { row: 0, col: 0 };
-let activeLevel = LEVELS[0];
-let activeLevelIndex = 0;
-let playerStart = { row: 0, col: 0 };
+// ── Game state ─────────────────────────────────────────────
+let maze       = null;   // { grid, size, exitR, exitC }
+let TILE       = 32;
+let lvlIdx     = 0;
+let lives      = 2;
 let relicTiles = [];
-let collectedRelics = 0;
-let livesRemaining = 3;
-let elapsedSeconds = 0;
-let timerInterval = null;
+let relicsLeft = 0;
+let state      = "overlay"; // overlay | playing
+let rafId      = null;
+let lastTs     = 0;
+let wakeTimer  = 0;
 
-function getUnlockedLevelIndex(progress) {
-  return Math.min(
-    LEVELS.length - 1,
-    Math.max(0, Math.floor(((progress.dailyCorrect || 0) - UNLOCK_TOTAL) / UNLOCK_TOTAL))
-  );
-}
+const player = { r:1, c:1, pr:1.0, pc:1.0, dr:0, dc:1, pdr:0, pdc:0, moving:false, prog:0 };
+const mino   = { r:1, c:1, pr:1.0, pc:1.0, dr:0, dc:0,         moving:false, prog:0 };
 
-function getMinotaurWakeMoves() {
-  return [6, 6, 7, 7][activeLevelIndex] || 6;
-}
+// ── Maze generation ────────────────────────────────────────
+function generateMaze(passages) {
+  const sz = passages * 2 + 1;
+  const grid = Array.from({ length: sz }, () => new Uint8Array(sz).fill(1));
 
-function getMinotaurStride() {
-  return [2, 2, 2, 2][activeLevelIndex] || 2;
-}
+  // Open all passage cells (odd row, odd col)
+  for (let r = 0; r < passages; r++)
+    for (let c = 0; c < passages; c++)
+      grid[r * 2 + 1][c * 2 + 1] = 0;
 
-function getCompletedSecretLevels(progress) {
-  return progress.completedSecretLevels || 0;
-}
+  // Iterative recursive-backtracker
+  const vis = Array.from({ length: passages }, () => new Uint8Array(passages));
+  const stack = [{ r: 0, c: 0 }];
+  vis[0][0] = 1;
 
-function getTodayKey() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function ensureTodayFields(parsed) {
-  const currentTodayKey = getTodayKey();
-  if (parsed.dateMode !== "local-v1" || (parsed.dailyDate || "") !== currentTodayKey) {
-    return {
-      ...parsed,
-      dateMode: "local-v1",
-      dailyDate: currentTodayKey,
-      dailyCorrect: 0,
-      dailyAnswered: 0,
-      completedSecretLevels: 0
-    };
-  }
-
-  return {
-    ...parsed,
-    dateMode: "local-v1",
-    dailyDate: currentTodayKey,
-    dailyCorrect: parsed.dailyCorrect || 0,
-    dailyAnswered: parsed.dailyAnswered || 0,
-    completedSecretLevels: parsed.completedSecretLevels || 0
-  };
-}
-
-function loadProgress() {
-  const saved = window.localStorage.getItem(STORAGE_KEY);
-  if (!saved) {
-    return {
-      totalCorrect: 0,
-      dailyCorrect: 0,
-      dailyDate: getTodayKey(),
-      dateMode: "local-v1",
-      completedSecretLevels: 0,
-      minotaurWins: 0
-    };
-  }
-
-  try {
-    const parsed = ensureTodayFields(JSON.parse(saved));
-    return {
-      ...parsed,
-      totalCorrect: parsed.totalCorrect || 0,
-      dailyCorrect: parsed.dailyCorrect || 0,
-      completedSecretLevels: parsed.completedSecretLevels || 0,
-      minotaurWins: parsed.minotaurWins || 0
-    };
-  } catch {
-    return {
-      totalCorrect: 0,
-      dailyCorrect: 0,
-      dailyDate: getTodayKey(),
-      dateMode: "local-v1",
-      completedSecretLevels: 0,
-      minotaurWins: 0
-    };
-  }
-}
-
-function saveProgress(progress) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-}
-
-function consumeEasterEggBypass() {
-  const queryBypass = new URLSearchParams(window.location.search).get("egg") === "olympus-star";
-  const storageBypass = window.localStorage.getItem(EASTER_EGG_KEY) === "true";
-
-  if (storageBypass) {
-    window.localStorage.removeItem(EASTER_EGG_KEY);
-  }
-
-  return queryBypass || storageBypass;
-}
-
-function clonePosition(position) {
-  return { row: position.row, col: position.col };
-}
-
-function formatTime(totalSeconds) {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
-}
-
-function findTile(symbol) {
-  for (let row = 0; row < activeLevel.rows.length; row += 1) {
-    const col = activeLevel.rows[row].indexOf(symbol);
-    if (col !== -1) {
-      return { row, col };
-    }
-  }
-
-  return { row: 0, col: 0 };
-}
-
-function getRelicGoal() {
-  return [3, 3, 4, 4][activeLevelIndex] || 4;
-}
-
-function positionsMatch(a, b) {
-  return a.row === b.row && a.col === b.col;
-}
-
-function getAllWalkableTiles() {
-  const tiles = [];
-  for (let row = 0; row < activeLevel.rows.length; row += 1) {
-    for (let col = 0; col < activeLevel.rows[row].length; col += 1) {
-      if (isWalkable(row, col) && activeLevel.rows[row][col] !== START && activeLevel.rows[row][col] !== EXIT) {
-        tiles.push({ row, col });
-      }
-    }
-  }
-  return tiles;
-}
-
-function createRelics() {
-  const walkable = getAllWalkableTiles().filter(
-    (tile) =>
-      !positionsMatch(tile, playerStart) &&
-      !positionsMatch(tile, exitTile) &&
-      !positionsMatch(tile, minotaur)
-  );
-
-  const selected = [];
-  const targetCount = Math.min(getRelicGoal(), walkable.length);
-  while (selected.length < targetCount && walkable.length > 0) {
-    const index = Math.floor(Math.random() * walkable.length);
-    const candidate = walkable.splice(index, 1)[0];
-    if (selected.some((tile) => Math.abs(tile.row - candidate.row) + Math.abs(tile.col - candidate.col) < 2)) {
-      continue;
-    }
-    selected.push(candidate);
-  }
-
-  relicTiles = selected;
-  collectedRelics = 0;
-}
-
-function collectRelicIfPresent() {
-  const relicIndex = relicTiles.findIndex((tile) => positionsMatch(tile, player));
-  if (relicIndex === -1) {
-    return false;
-  }
-
-  relicTiles.splice(relicIndex, 1);
-  collectedRelics += 1;
-  return true;
-}
-
-function updateBanner(title = "", copy = "", visible = false) {
-  banner.hidden = !visible;
-  bannerTitle.textContent = title;
-  bannerCopy.textContent = copy;
-}
-
-function stopTimer() {
-  if (timerInterval) {
-    window.clearInterval(timerInterval);
-    timerInterval = null;
-  }
-}
-
-function startTimer() {
-  stopTimer();
-  timerInterval = window.setInterval(() => {
-    if (gameState !== "playing") {
-      return;
-    }
-    elapsedSeconds += 1;
-    timerLabel.textContent = formatTime(elapsedSeconds);
-  }, 1000);
-}
-
-function isWall(row, col) {
-  return activeLevel.rows[row]?.[col] === WALL;
-}
-
-function isWalkable(row, col) {
-  return !isWall(row, col) && activeLevel.rows[row]?.[col];
-}
-
-function findNearestWalkable(position) {
-  if (isWalkable(position.row, position.col)) {
-    return clonePosition(position);
-  }
-
-  const queue = [clonePosition(position)];
-  const visited = new Set([`${position.row},${position.col}`]);
-
-  while (queue.length > 0) {
-    const current = queue.shift();
-    const candidates = [
-      { row: current.row - 1, col: current.col },
-      { row: current.row + 1, col: current.col },
-      { row: current.row, col: current.col - 1 },
-      { row: current.row, col: current.col + 1 }
-    ];
-
-    for (const tile of candidates) {
-      const key = `${tile.row},${tile.col}`;
-      const inBounds =
-        tile.row >= 0 &&
-        tile.row < activeLevel.rows.length &&
-        tile.col >= 0 &&
-        tile.col < activeLevel.rows[0].length;
-
-      if (!inBounds || visited.has(key)) {
-        continue;
-      }
-
-      if (isWalkable(tile.row, tile.col)) {
-        return tile;
-      }
-
-      visited.add(key);
-      queue.push(tile);
-    }
-  }
-
-  return findTile(START);
-}
-
-function getNeighbors(position) {
-  const candidates = [
-    { row: position.row - 1, col: position.col },
-    { row: position.row + 1, col: position.col },
-    { row: position.row, col: position.col - 1 },
-    { row: position.row, col: position.col + 1 }
-  ];
-
-  return candidates.filter((tile) => {
-    const inBounds =
-      tile.row >= 0 &&
-      tile.row < activeLevel.rows.length &&
-      tile.col >= 0 &&
-      tile.col < activeLevel.rows[0].length;
-
-    return inBounds && !isWall(tile.row, tile.col);
-  });
-}
-
-function getPathStepToward(start, target) {
-  if (start.row === target.row && start.col === target.col) {
-    return start;
-  }
-
-  const queue = [start];
-  const visited = new Set([`${start.row},${start.col}`]);
-  const cameFrom = new Map();
-
-  while (queue.length > 0) {
-    const current = queue.shift();
-    if (current.row === target.row && current.col === target.col) {
-      break;
-    }
-
-    getNeighbors(current).forEach((neighbor) => {
-      const key = `${neighbor.row},${neighbor.col}`;
-      if (visited.has(key)) {
-        return;
-      }
-
-      visited.add(key);
-      cameFrom.set(key, current);
-      queue.push(neighbor);
+  while (stack.length) {
+    const cur = stack[stack.length - 1];
+    const dirs = shuffle([[-1,0],[1,0],[0,-1],[0,1]]).filter(([dr, dc]) => {
+      const nr = cur.r + dr, nc = cur.c + dc;
+      return nr >= 0 && nr < passages && nc >= 0 && nc < passages && !vis[nr][nc];
     });
+    if (!dirs.length) { stack.pop(); continue; }
+    const [dr, dc] = dirs[0];
+    grid[cur.r * 2 + 1 + dr][cur.c * 2 + 1 + dc] = 0; // knock down wall
+    const nr = cur.r + dr, nc = cur.c + dc;
+    vis[nr][nc] = 1;
+    stack.push({ r: nr, c: nc });
   }
 
-  const targetKey = `${target.row},${target.col}`;
-  if (!cameFrom.has(targetKey)) {
-    const neighbors = getNeighbors(start);
-    return neighbors[0] || start;
+  // Add ~15% loops so multiple paths exist (Pac-Man needs options)
+  const walls = [];
+  for (let r = 1; r < sz - 1; r++)
+    for (let c = 1; c < sz - 1; c++)
+      if (grid[r][c] === 1 && ((r % 2 === 0 && c % 2 === 1) || (r % 2 === 1 && c % 2 === 0)))
+        walls.push([r, c]);
+  shuffle(walls).slice(0, Math.floor(walls.length * 0.15))
+    .forEach(([r, c]) => { grid[r][c] = 0; });
+
+  // Mark exit (bottom-right passage cell)
+  const exitR = sz - 2, exitC = sz - 2;
+  grid[exitR][exitC] = 2; // 2 = exit tile
+
+  return { grid, size: sz, exitR, exitC };
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-
-  let step = target;
-  let previous = cameFrom.get(targetKey);
-
-  while (previous && (previous.row !== start.row || previous.col !== start.col)) {
-    step = previous;
-    previous = cameFrom.get(`${previous.row},${previous.col}`);
-  }
-
-  return step;
+  return arr;
 }
 
-function updateHud(progress) {
-  movesLabel.textContent = String(moveCount);
-  correctCountLabel.textContent = String(progress.dailyCorrect || 0);
-  levelLabel.textContent = `${activeLevel.name} • ${activeLevel.subtitle}`;
-  relicsLabel.textContent = `${collectedRelics} / ${getRelicGoal()}`;
-  livesLabel.textContent = String(livesRemaining);
-  timerLabel.textContent = formatTime(elapsedSeconds);
-  tipLabel.textContent =
-    activeLevelIndex >= 2
-      ? "The Minotaur now moves one square at a time, but the later mazes still punish wrong turns."
-      : "The Minotaur waits a few moves before chasing. Grab relics, then head for the gate.";
-}
+// ── BFS: one step toward target ────────────────────────────
+function bfsStep(grid, sz, fr, fc, tr, tc) {
+  if (fr === tr && fc === tc) return { dr: 0, dc: 0 };
+  const sk = fr * sz + fc;
+  const tk = tr * sz + tc;
+  const prev = new Map([[sk, -1]]);
+  const queue = [sk];
 
-function setStatus(message) {
-  statusLabel.textContent = message;
-}
-
-function drawBoard() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  context.fillStyle = "#130c0d";
-  context.fillRect(0, 0, canvas.width, canvas.height);
-
-  for (let row = 0; row < activeLevel.rows.length; row += 1) {
-    for (let col = 0; col < activeLevel.rows[row].length; col += 1) {
-      const x = col * TILE_SIZE;
-      const y = row * TILE_SIZE;
-      const tile = activeLevel.rows[row][col];
-
-      if (tile === WALL) {
-        context.fillStyle = "#24401f";
-        context.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-        context.fillStyle = "#35522e";
-        context.fillRect(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
-        context.fillStyle = "rgba(255, 255, 255, 0.06)";
-        context.fillRect(x + 8, y + 8, TILE_SIZE - 16, TILE_SIZE - 16);
-      } else {
-        context.fillStyle = (row + col) % 2 === 0 ? "#1d1113" : "#211417";
-        context.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-      }
-
-      if (tile === EXIT) {
-        const exitUnlocked = collectedRelics >= getRelicGoal();
-        context.fillStyle = exitUnlocked ? "#f3c969" : "#7c6d4a";
-        context.fillRect(x + 10, y + 10, TILE_SIZE - 20, TILE_SIZE - 20);
-        context.strokeStyle = exitUnlocked ? "#fff2bf" : "#c9b488";
-        context.lineWidth = 3;
-        context.strokeRect(x + 10, y + 10, TILE_SIZE - 20, TILE_SIZE - 20);
-        if (!exitUnlocked) {
-          context.fillStyle = "#f8e6b8";
-          context.beginPath();
-          context.arc(x + TILE_SIZE / 2, y + TILE_SIZE / 2 - 4, 5, 0, Math.PI * 2);
-          context.fill();
-        }
-      }
+  outer: for (let i = 0; i < queue.length; i++) {
+    const k = queue[i];
+    const r = Math.floor(k / sz), c = k % sz;
+    for (const [dr, dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+      const nr = r + dr, nc = c + dc;
+      if (nr < 0 || nr >= sz || nc < 0 || nc >= sz || grid[nr][nc] === 1) continue;
+      const nk = nr * sz + nc;
+      if (prev.has(nk)) continue;
+      prev.set(nk, k);
+      if (nk === tk) break outer;
+      queue.push(nk);
     }
   }
 
-  relicTiles.forEach((tile) => {
-    const centerX = tile.col * TILE_SIZE + TILE_SIZE / 2;
-    const centerY = tile.row * TILE_SIZE + TILE_SIZE / 2;
-    context.fillStyle = "#ffe381";
-    context.beginPath();
-    context.moveTo(centerX, centerY - 11);
-    context.lineTo(centerX + 7, centerY - 2);
-    context.lineTo(centerX + 12, centerY + 10);
-    context.lineTo(centerX, centerY + 4);
-    context.lineTo(centerX - 12, centerY + 10);
-    context.lineTo(centerX - 7, centerY - 2);
-    context.closePath();
-    context.fill();
+  if (!prev.has(tk)) return { dr: 0, dc: 0 };
+
+  // Trace back to find the first step from start
+  let cur = tk;
+  while (prev.get(cur) !== sk) cur = prev.get(cur);
+  return { dr: Math.floor(cur / sz) - fr, dc: cur % sz - fc };
+}
+
+// ── Relic placement ────────────────────────────────────────
+function placeRelics(count) {
+  const { grid, size } = maze;
+  const cands = [];
+  for (let r = 1; r < size - 1; r++)
+    for (let c = 1; c < size - 1; c++)
+      if (grid[r][c] === 0 && Math.abs(r - 1) + Math.abs(c - 1) > 4)
+        cands.push({ r, c });
+  shuffle(cands);
+  relicTiles = cands.slice(0, count);
+  relicsLeft = count;
+}
+
+// ── Canvas sizing ──────────────────────────────────────────
+function computeTileSize() {
+  const sz = maze.size;
+  const maxPx = Math.min(window.innerWidth - 24, window.innerHeight - 180, 620);
+  return Math.max(Math.floor(maxPx / sz), 8);
+}
+
+function resizeCanvas() {
+  if (!maze) return;
+  TILE = computeTileSize();
+  canvas.width  = maze.size * TILE;
+  canvas.height = maze.size * TILE;
+}
+
+// ── Input ──────────────────────────────────────────────────
+const KEY_MAP = {
+  ArrowUp:[-1,0], ArrowDown:[1,0], ArrowLeft:[0,-1], ArrowRight:[0,1],
+  w:[-1,0], s:[1,0], a:[0,-1], d:[0,1],
+};
+
+function applyDir(dr, dc) {
+  if (state !== "playing") return;
+  player.pdr = dr;
+  player.pdc = dc;
+  if (!player.moving) tryStartPlayer();
+}
+
+document.addEventListener("keydown", e => {
+  const d = KEY_MAP[e.key];
+  if (d) { e.preventDefault(); applyDir(d[0], d[1]); }
+});
+
+// D-pad (shows on touch devices via CSS `pointer: coarse`)
+if (dpadEl) {
+  const DMAP = { up:[-1,0], down:[1,0], left:[0,-1], right:[0,1] };
+  dpadEl.querySelectorAll("[data-dir]").forEach(btn => {
+    const [dr, dc] = DMAP[btn.dataset.dir];
+    const onPress = e => { e.preventDefault(); applyDir(dr, dc); };
+    btn.addEventListener("pointerdown", onPress);
   });
-
-  const playerX = player.col * TILE_SIZE + TILE_SIZE / 2;
-  const playerY = player.row * TILE_SIZE + TILE_SIZE / 2;
-  context.fillStyle = "#7cc4ff";
-  context.beginPath();
-  context.arc(playerX, playerY, 13, 0, Math.PI * 2);
-  context.fill();
-  context.fillStyle = "#ffffff";
-  context.beginPath();
-  context.arc(playerX + 4, playerY - 4, 2.6, 0, Math.PI * 2);
-  context.fill();
-
-  const minotaurX = minotaur.col * TILE_SIZE + TILE_SIZE / 2;
-  const minotaurY = minotaur.row * TILE_SIZE + TILE_SIZE / 2;
-  context.fillStyle = "#8f4228";
-  context.beginPath();
-  context.arc(minotaurX, minotaurY, 14, 0, Math.PI * 2);
-  context.fill();
-  context.strokeStyle = "#e7bb7f";
-  context.lineWidth = 3;
-  context.beginPath();
-  context.moveTo(minotaurX - 10, minotaurY - 8);
-  context.lineTo(minotaurX - 16, minotaurY - 18);
-  context.moveTo(minotaurX + 10, minotaurY - 8);
-  context.lineTo(minotaurX + 16, minotaurY - 18);
-  context.stroke();
 }
 
-function resetGame(progress) {
-  if (!easterEggMode) {
-    activeLevelIndex = getCompletedSecretLevels(progress);
-  }
-  activeLevel = LEVELS[activeLevelIndex];
-  canvas.width = activeLevel.rows[0].length * TILE_SIZE;
-  canvas.height = activeLevel.rows.length * TILE_SIZE;
-  playerStart = findTile(START);
-  player = clonePosition(playerStart);
-  exitTile = findTile(EXIT);
-  minotaur = findNearestWalkable(activeLevel.minotaurStart);
-  moveCount = 0;
-  gameState = "playing";
-  livesRemaining = 3;
-  elapsedSeconds = 0;
-  createRelics();
-  updateBanner("", "", false);
-  setStatus("Stay ahead of the Minotaur");
-  updateHud(progress);
-  drawBoard();
-  startTimer();
+// ── Player movement ────────────────────────────────────────
+function isOpen(r, c) {
+  const { grid, size } = maze;
+  return r >= 0 && r < size && c >= 0 && c < size && grid[r][c] !== 1;
 }
 
-function handleWin() {
-  gameState = "won";
-  stopTimer();
-  const progress = loadProgress();
-  progress.minotaurWins = (progress.minotaurWins || 0) + 1;
-  if (!easterEggMode) {
-    progress.completedSecretLevels = Math.max(getCompletedSecretLevels(progress), activeLevelIndex + 1);
-  }
-  saveProgress(progress);
-  setStatus("Level cleared");
-  updateBanner(
-    "Maze cleared",
-    `You escaped in ${formatTime(elapsedSeconds)} with ${livesRemaining} lives left and ${collectedRelics} relics collected.`,
-    true
-  );
-  drawBoard();
-
-  if (easterEggMode && activeLevelIndex < LEVELS.length - 1) {
-    window.setTimeout(() => {
-      activeLevelIndex += 1;
-      resetGame(loadProgress());
-      setStatus(`Level ${activeLevelIndex + 1} begins`);
-    }, 1400);
-  }
-}
-
-function handleLoss() {
-  livesRemaining -= 1;
-  if (livesRemaining > 0) {
-    player = clonePosition(playerStart);
-    minotaur = findNearestWalkable(activeLevel.minotaurStart);
-    setStatus("Caught by the Minotaur. Try again from the start.");
-    updateHud(loadProgress());
-    drawBoard();
+function tryStartPlayer() {
+  // Prefer pending direction
+  if ((player.pdr || player.pdc) && isOpen(player.r + player.pdr, player.c + player.pdc)) {
+    player.dr   = player.pdr;
+    player.dc   = player.pdc;
+    player.pdr  = 0;
+    player.pdc  = 0;
+    player.moving = true;
+    player.prog   = 0;
     return;
   }
-
-  gameState = "lost";
-  stopTimer();
-  setStatus("The Minotaur caught you");
-  updateBanner(
-    "Maze over",
-    `The Minotaur used up all 3 lives. Hit restart and try a different path.`,
-    true
-  );
-  drawBoard();
-}
-
-function moveMinotaur() {
-  if (moveCount <= getMinotaurWakeMoves()) {
-    return;
-  }
-
-  if (moveCount % getMinotaurStride() !== 0) {
-    return;
-  }
-
-  for (let stepCount = 0; stepCount < activeLevel.minotaurSpeed; stepCount += 1) {
-    const nextStep = getPathStepToward(minotaur, player);
-    minotaur = clonePosition(nextStep);
-    if (player.row === minotaur.row && player.col === minotaur.col) {
-      break;
-    }
+  // Continue current direction
+  if ((player.dr || player.dc) && isOpen(player.r + player.dr, player.c + player.dc)) {
+    player.moving = true;
+    player.prog   = 0;
   }
 }
 
-function tryMovePlayer(nextRow, nextCol) {
-  if (gameState !== "playing" || isWall(nextRow, nextCol)) {
-    return;
+function stepPlayer(dt) {
+  if (!player.moving) { tryStartPlayer(); return; }
+
+  player.prog += PLAYER_SPEED * dt;
+
+  if (player.prog >= 1.0) {
+    const over = player.prog - 1.0;
+    player.r += player.dr;
+    player.c += player.dc;
+    player.pr = player.r;
+    player.pc = player.c;
+    player.moving = false;
+    player.prog   = 0;
+    onPlayerTile();
+    if (player.moving) player.prog = Math.min(over, 0.95);
+  } else {
+    player.pr = player.r + player.dr * player.prog;
+    player.pc = player.c + player.dc * player.prog;
+  }
+}
+
+function onPlayerTile() {
+  // Collect relic?
+  const ri = relicTiles.findIndex(t => t.r === player.r && t.c === player.c);
+  if (ri !== -1) {
+    relicTiles.splice(ri, 1);
+    relicsLeft--;
+    updateHud();
+    setStatus(relicsLeft > 0 ? `${relicsLeft} RELIC${relicsLeft !== 1 ? "S" : ""} LEFT` : "GATE OPEN — RUN!");
   }
 
-  player = { row: nextRow, col: nextCol };
-  moveCount += 1;
-  const gotRelic = collectRelicIfPresent();
-  if (gotRelic) {
-    setStatus("Relic collected");
-  }
-
-  if (player.row === exitTile.row && player.col === exitTile.col && collectedRelics >= getRelicGoal()) {
+  // Reached exit?
+  if (relicsLeft === 0 && maze.grid[player.r][player.c] === 2) {
     handleWin();
     return;
   }
 
-  moveMinotaur();
-
-  if (player.row === minotaur.row && player.col === minotaur.col) {
-    handleLoss();
-    return;
-  }
-
-  if (!gotRelic) {
-    setStatus(collectedRelics >= getRelicGoal() ? "The gate is open. Run." : "Keep moving");
-  }
-  updateHud(loadProgress());
-  drawBoard();
+  tryStartPlayer();
 }
 
-function handleKeydown(event) {
-  const moves = {
-    ArrowUp: { row: -1, col: 0 },
-    ArrowDown: { row: 1, col: 0 },
-    ArrowLeft: { row: 0, col: -1 },
-    ArrowRight: { row: 0, col: 1 }
-  };
+// ── Minotaur movement ──────────────────────────────────────
+function stepMino(dt) {
+  if (wakeTimer > 0) { wakeTimer -= dt; return; }
 
-  const move = moves[event.key];
-  if (!move) {
-    return;
+  if (!mino.moving) {
+    const { dr, dc } = bfsStep(maze.grid, maze.size, mino.r, mino.c, player.r, player.c);
+    if (!dr && !dc) return;
+    mino.dr = dr;
+    mino.dc = dc;
+    mino.moving = true;
+    mino.prog   = 0;
   }
 
-  event.preventDefault();
-  tryMovePlayer(player.row + move.row, player.col + move.col);
+  mino.prog += BASE_M_SPD * LVLS[lvlIdx].sm * dt;
+
+  if (mino.prog >= 1.0) {
+    mino.r += mino.dr;
+    mino.c += mino.dc;
+    mino.pr = mino.r;
+    mino.pc = mino.c;
+    mino.moving = false;
+    mino.prog   = 0;
+  } else {
+    mino.pr = mino.r + mino.dr * mino.prog;
+    mino.pc = mino.c + mino.dc * mino.prog;
+  }
 }
 
+// ── Collision ──────────────────────────────────────────────
+function checkCollision() {
+  if (Math.abs(player.pr - mino.pr) + Math.abs(player.pc - mino.pc) < 0.75) {
+    handleCaught();
+  }
+}
+
+// ── Events ────────────────────────────────────────────────
+function handleCaught() {
+  if (state !== "playing") return;
+  state = "overlay";
+  lives--;
+  if (lives <= 0) {
+    showOverlay("💀", "CAUGHT!", "The Minotaur got you. No lives left.",
+      "RETRY", () => startLevel(lvlIdx, true), null, null);
+  } else {
+    showOverlay("😤", "CAUGHT!", `You have ${lives} life remaining.`,
+      "TRY AGAIN", () => startLevel(lvlIdx, false), null, null);
+  }
+}
+
+function handleWin() {
+  if (state !== "playing") return;
+  state = "overlay";
+
+  // Save furthest level
+  const best = parseInt(localStorage.getItem(MAZE_LVL_KEY) || "0", 10);
+  if (lvlIdx + 1 > best) localStorage.setItem(MAZE_LVL_KEY, String(lvlIdx + 1));
+
+  if (lvlIdx >= LVLS.length - 1) {
+    // Final level — send to battle
+    showOverlay("⚔️", "YOU FOUND HIM!",
+      "You've navigated the full labyrinth. Now face the Minotaur in battle!",
+      "FIGHT THE MINOTAUR", () => { window.location.href = "./games.html?battle=theseus"; },
+      "PLAY AGAIN", () => startLevel(0, true));
+  } else {
+    const next = lvlIdx + 1;
+    const nextTheme = THEMES[LVLS[next].th];
+    showOverlay("🏆", `LEVEL ${lvlIdx + 1} CLEARED!`,
+      `Entering: ${nextTheme.label}`,
+      "NEXT LEVEL", () => startLevel(next, true), null, null);
+  }
+}
+
+// ── Overlay ────────────────────────────────────────────────
+function showOverlay(icon, title, msg, btn1, fn1, btn2, fn2) {
+  oIconEl.textContent  = icon;
+  oTitleEl.textContent = title;
+  oMsgEl.textContent   = msg;
+  oBtnEl.textContent   = btn1;
+  oBtnEl.onclick = () => { hideOverlay(); fn1(); };
+
+  if (btn2 && oBtn2El) {
+    oBtn2El.hidden = false;
+    oBtn2El.textContent = btn2;
+    oBtn2El.onclick = () => { hideOverlay(); fn2(); };
+  } else if (oBtn2El) {
+    oBtn2El.hidden = true;
+  }
+
+  overlayEl.hidden = false;
+  state = "overlay";
+}
+
+function hideOverlay() {
+  overlayEl.hidden = true;
+}
+
+// ── HUD ────────────────────────────────────────────────────
+function updateHud() {
+  const cfg = LVLS[lvlIdx];
+  const theme = THEMES[cfg.th];
+  if (hudLvlEl)  hudLvlEl.textContent  = `${theme.label}  ·  LVL ${lvlIdx + 1}`;
+  if (hudLivEl)  hudLivEl.textContent  = "❤️".repeat(lives);
+  if (hudRelEl)  hudRelEl.textContent  = `⭐ ${cfg.rel - relicsLeft} / ${cfg.rel}`;
+}
+
+function setStatus(msg) {
+  if (hudStatEl) hudStatEl.textContent = msg;
+}
+
+// ── Rendering ──────────────────────────────────────────────
+function draw() {
+  const T = TILE;
+  const { grid, size } = maze;
+  const theme = THEMES[LVLS[lvlIdx].th];
+
+  // Background
+  ctx.fillStyle = theme.fg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Tiles
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      const x = c * T, y = r * T, v = grid[r][c];
+      if (v === 1) {
+        ctx.fillStyle = theme.wall;
+        ctx.fillRect(x, y, T, T);
+        ctx.fillStyle = theme.wallHi;
+        ctx.fillRect(x + 2, y + 2, T - 4, T - 4);
+      } else {
+        ctx.fillStyle = (r + c) % 2 === 0 ? "rgba(0,0,0,0.07)" : "rgba(0,0,0,0)";
+        ctx.fillRect(x, y, T, T);
+        if (v === 2) drawExit(x, y, T, theme);
+      }
+    }
+  }
+
+  // Relics
+  relicTiles.forEach(t => drawRelic(t.c * T + T / 2, t.r * T + T / 2, T));
+
+  // Minotaur (draw under player so player is always visible)
+  drawMino(mino.pc * T + T / 2, mino.pr * T + T / 2, T, theme);
+
+  // Player
+  drawPlayer(player.pc * T + T / 2, player.pr * T + T / 2, T, theme);
+}
+
+function drawExit(x, y, T, theme) {
+  const open = relicsLeft === 0;
+  const m = Math.max(3, Math.floor(T * 0.18));
+  ctx.fillStyle = open ? theme.accent : "rgba(243,201,105,0.22)";
+  ctx.fillRect(x + m, y + m, T - m * 2, T - m * 2);
+  if (!open) {
+    ctx.font = `${Math.floor(T * 0.42)}px serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("🔒", x + T / 2, y + T / 2);
+  }
+}
+
+function drawPlayer(x, y, T, theme) {
+  const r = T * 0.38;
+  if (playerImg && playerImg.complete && playerImg.naturalWidth) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(playerImg, x - r, y - r, r * 2, r * 2);
+    ctx.restore();
+    return;
+  }
+  // Default: gold circle
+  ctx.fillStyle = theme.accent;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.font = `${Math.floor(r * 1.05)}px serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("🗡️", x, y);
+}
+
+function drawMino(x, y, T, theme) {
+  const r = T * 0.40;
+  if (minotaurImg && minotaurImg.complete && minotaurImg.naturalWidth) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(minotaurImg, x - r, y - r, r * 2, r * 2);
+    ctx.restore();
+    return;
+  }
+  // Default: dark red circle with horns
+  ctx.fillStyle = "#7a1a1a";
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#c97b3b";
+  ctx.lineWidth = Math.max(2, T * 0.06);
+  ctx.beginPath();
+  ctx.moveTo(x - r * 0.55, y - r * 0.55);
+  ctx.lineTo(x - r * 0.95, y - r * 1.1);
+  ctx.moveTo(x + r * 0.55, y - r * 0.55);
+  ctx.lineTo(x + r * 0.95, y - r * 1.1);
+  ctx.stroke();
+}
+
+function drawRelic(x, y, T) {
+  const R = T * 0.26, r2 = R * 0.44;
+  if (relicImg && relicImg.complete && relicImg.naturalWidth) {
+    ctx.drawImage(relicImg, x - R, y - R, R * 2, R * 2);
+    return;
+  }
+  ctx.fillStyle = "#ffe066";
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const a = (i * Math.PI / 5) - Math.PI / 2;
+    const rad = i % 2 === 0 ? R : r2;
+    i === 0
+      ? ctx.moveTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad)
+      : ctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+// ── Game loop ──────────────────────────────────────────────
+function loop(ts) {
+  const dt = Math.min((ts - lastTs) / 1000, 0.1);
+  lastTs = ts;
+
+  if (state === "playing") {
+    stepPlayer(dt);
+    stepMino(dt);
+    checkCollision();
+    draw();
+  }
+
+  rafId = requestAnimationFrame(loop);
+}
+
+// ── Level setup ────────────────────────────────────────────
+function resetPositions() {
+  const sz = maze.size;
+  player.r = 1; player.c = 1;
+  player.pr = 1; player.pc = 1;
+  player.dr = 0; player.dc = 1;
+  player.pdr = 0; player.pdc = 0;
+  player.moving = false; player.prog = 0;
+
+  // Minotaur starts at opposite corner
+  mino.r = sz - 2; mino.c = 1;
+  mino.pr = sz - 2; mino.pc = 1;
+  mino.dr = 0; mino.dc = 0;
+  mino.moving = false; mino.prog = 0;
+  wakeTimer = WAKE_SECS;
+}
+
+function startLevel(idx, resetLives) {
+  lvlIdx = Math.max(0, Math.min(idx, LVLS.length - 1));
+  if (resetLives) lives = 2;
+  maze = generateMaze(LVLS[lvlIdx].p);
+  resizeCanvas();
+  placeRelics(LVLS[lvlIdx].rel);
+  resetPositions();
+  updateHud();
+  setStatus("FIND THE RELICS!");
+  hideOverlay();
+  state = "playing";
+
+  if (!rafId) {
+    lastTs = performance.now();
+    rafId = requestAnimationFrame(loop);
+  }
+}
+
+// ── Date util ──────────────────────────────────────────────
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+// ── Init / unlock gate ─────────────────────────────────────
 function init() {
-  const progress = loadProgress();
-  if (consumeEasterEggBypass()) {
-    easterEggMode = true;
-    activeLevelIndex = 0;
-    lockedPanel.hidden = true;
-    gamePanel.hidden = false;
-    updateHud(progress);
-    resetGame(progress);
-    setStatus("Secret star path unlocked");
-    window.addEventListener("keydown", handleKeydown);
-    restartButton.addEventListener("click", () => {
-      resetGame(progress);
-    });
+  // Easter egg bypass
+  const bypass = new URLSearchParams(location.search).get("egg") === "olympus-star"
+    || localStorage.getItem(EASTER_KEY) === "true";
+  if (bypass) {
+    localStorage.removeItem(EASTER_KEY);
+    startLevel(0, true);
     return;
   }
 
-  const unlockedCount = Math.floor((progress.dailyCorrect || 0) / UNLOCK_TOTAL);
-  const completedCount = getCompletedSecretLevels(progress);
+  // Check daily math unlock
+  let dailyCorrect = 0;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      if (p.dailyDate === todayKey()) dailyCorrect = p.dailyCorrect || 0;
+    }
+  } catch { /* ignore */ }
 
-  if (unlockedCount === 0) {
-    lockedPanel.hidden = false;
-    gamePanel.hidden = true;
-    lockedTitle.textContent = "Secret Challenge Not Ready Yet";
-    lockedCopy.textContent = "This page unlocks after 40 correct answers today in Math Quest.";
+  if (dailyCorrect < UNLOCK_DAILY) {
+    showOverlay("🔒", "MAZE LOCKED",
+      `Answer ${UNLOCK_DAILY - dailyCorrect} more math questions correctly today to unlock the maze.`,
+      "GO TO MATH", () => { window.location.href = "./math.html"; }, null, null);
+
+    // Still start the loop so canvas renders (shows locked overlay over the maze)
+    maze = generateMaze(LVLS[0].p);
+    resizeCanvas();
+    placeRelics(LVLS[0].rel);
+    resetPositions();
+    lastTs = performance.now();
+    rafId = requestAnimationFrame(loop);
     return;
   }
 
-  if (completedCount >= unlockedCount) {
-    lockedPanel.hidden = false;
-    gamePanel.hidden = true;
-    lockedTitle.textContent = "Secret Challenge Cleared";
-    lockedCopy.textContent =
-      "Miles beat the current secret maze. The next one appears after 40 more correct answers today.";
-    return;
-  }
-
-  lockedPanel.hidden = true;
-  gamePanel.hidden = false;
-  updateHud(progress);
-  resetGame(progress);
-  window.addEventListener("keydown", handleKeydown);
-  restartButton.addEventListener("click", () => {
-    resetGame(progress);
-  });
+  // Resume furthest reached level
+  const best = Math.min(parseInt(localStorage.getItem(MAZE_LVL_KEY) || "0", 10), LVLS.length - 1);
+  startLevel(best, true);
 }
+
+window.addEventListener("resize", () => {
+  resizeCanvas();
+  if (maze && state !== "overlay") draw();
+});
 
 init();

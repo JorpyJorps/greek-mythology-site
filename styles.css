@@ -3824,3 +3824,167 @@ body.page-games {
   flex-wrap: wrap;
   margin-bottom: 8px;
 }
+
+/* ── Minotaur Maze ──────────────────────────────────────── */
+body.page-maze {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Full-screen overlay */
+.maze-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 5, 6, 0.9);
+  z-index: 200;
+}
+.maze-overlay[hidden] { display: none; }
+
+.maze-card {
+  max-width: 380px;
+  width: 90vw;
+  padding: 36px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  border-radius: 4px;
+}
+
+.maze-o-icon { font-size: 2.8rem; }
+
+.maze-o-title {
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.maze-o-msg {
+  font-family: "Trebuchet MS", sans-serif;
+  font-size: 0.95rem;
+  color: var(--cream);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Shell layout */
+.maze-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.maze-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.maze-hud-center {
+  flex: 1;
+  text-align: center;
+  font-size: 0.42rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.maze-hud-right {
+  font-size: 0.5rem;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+/* Canvas area */
+.maze-game-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 8px 8px 0;
+  overflow: hidden;
+}
+
+#maze-canvas {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  max-width: 100%;
+}
+
+/* Status bar */
+.maze-statusbar {
+  flex-shrink: 0;
+  font-size: 0.48rem;
+  color: var(--gold);
+  text-align: center;
+  padding: 8px 16px 12px;
+  letter-spacing: 0.12em;
+}
+
+/* ── D-pad (touch only) ─────────────────────────────────── */
+.maze-dpad {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .maze-dpad {
+    display: grid;
+    grid-template-areas:
+      ".    up   ."
+      "left mid  right"
+      ".    down .";
+    grid-template-columns: 60px 60px 60px;
+    grid-template-rows:    60px 60px 60px;
+    gap: 4px;
+  }
+}
+
+.maze-dpad [data-dir="up"]    { grid-area: up; }
+.maze-dpad [data-dir="left"]  { grid-area: left; }
+.maze-dpad [data-dir="right"] { grid-area: right; }
+.maze-dpad [data-dir="down"]  { grid-area: down; }
+.maze-dpad .dpad-center       { grid-area: mid; }
+
+.dpad-btn {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(243, 201, 105, 0.12);
+  border: 2px solid rgba(243, 201, 105, 0.3);
+  border-radius: 10px;
+  color: var(--gold);
+  font-size: 1.3rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background 0.1s;
+}
+.dpad-btn:active {
+  background: rgba(243, 201, 105, 0.28);
+}
+
+/* Mobile: tighten HUD */
+@media (max-width: 480px) {
+  .maze-hud-center { font-size: 0.35rem; }
+  .maze-hud-right  { font-size: 0.4rem; }
+}
