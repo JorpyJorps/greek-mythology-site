@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Character Wiki | Miles' Myth Wiki</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css?v=47" />
+  </head>
+  <body class="page-wiki">
+
+    <div class="wiki-shell">
+
+      <nav class="wiki-topbar">
+        <a href="/index.html" class="math-back home-btn pixel">🏛️ HOME</a>
+        <h1 class="wiki-title pixel">CHARACTER WIKI</h1>
+      </nav>
+
+      <!-- Search -->
+      <div class="wiki-search-row">
+        <input
+          class="wiki-search"
+          id="wiki-search"
+          type="search"
+          placeholder="Search gods, heroes, monsters…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+
+      <!-- Category filters -->
+      <div class="wiki-filters">
+        <button class="wiki-filter-btn is-active" data-filter="all"      type="button">ALL</button>
+        <button class="wiki-filter-btn"            data-filter="god"      type="button">⚡ GODS</button>
+        <button class="wiki-filter-btn"            data-filter="hero"     type="button">⚔️ HEROES</button>
+        <button class="wiki-filter-btn"            data-filter="monster"  type="button">🐉 MONSTERS</button>
+        <button class="wiki-filter-btn"            data-filter="titan"    type="button">🏔️ TITANS</button>
+      </div>
+
+      <!-- Character grid -->
+      <div class="wiki-grid" id="wiki-grid"></div>
+
+    </div>
+
+    <script type="module">
+      import { entries } from "./data.js";
+
+      // Filter out story/compare entries — only real characters
+      const characters = entries.filter(e =>
+        ["god", "hero", "monster", "titan"].includes(e.category)
+      );
+
+      const ICONS = {
+        zeus: "⚡", athena: "🦉", poseidon: "🔱", artemis: "🌙",
+        apollo: "☀️", hera: "👑", demeter: "🌾", hestia: "🔥",
+        hercules: "💪", aphrodite: "🌹", hephaestus: "⚒️", ares: "🛡️",
+        odysseus: "⚓", hades: "💀", hermes: "🪶", dionysus: "🍇",
+        persephone: "🌸", perseus: "🗡️", theseus: "🧵", achilles: "⚡",
+        atalanta: "🏹", jason: "🐏", bellerophon: "🐴",
+        cronus: "⏳", rhea: "🌿", atlas: "🌍", prometheus: "🔥",
+        hyperion: "🌞", oceanus: "🌊",
+        medusa: "🐍", minotaur: "🐂", cyclops: "👁️", cerberus: "🐕",
+        hydra: "🐉", chimera: "🔥", sphinx: "🧩", sirens: "🎵",
+        harpies: "💨", scylla: "🦑", charybdis: "🌀", "nemean-lion": "🦁",
+      };
+
+      const CAT_ICON = { god: "⚡", hero: "⚔️", monster: "🐉", titan: "🏔️" };
+
+      const grid    = document.getElementById("wiki-grid");
+      const search  = document.getElementById("wiki-search");
+      const filters = document.querySelectorAll(".wiki-filter-btn");
+
+      let activeFilter = "all";
+      let searchQuery  = "";
+
+      function iconFor(entry) {
+        return ICONS[entry.id] || CAT_ICON[entry.category] || "✨";
+      }
+
+      function render() {
+        const q = searchQuery.toLowerCase().trim();
+        const visible = characters.filter(c => {
+          const matchCat  = activeFilter === "all" || c.category === activeFilter;
+          const matchText = !q
+            || c.name.toLowerCase().includes(q)
+            || (c.title  || "").toLowerCase().includes(q)
+            || (c.symbol || "").toLowerCase().includes(q)
+            || (c.summary|| "").toLowerCase().includes(q);
+          return matchCat && matchText;
+        });
+
+        if (!visible.length) {
+          grid.innerHTML = `<p class="wiki-empty">No characters match "${q}"</p>`;
+          return;
+        }
+
+        grid.innerHTML = visible.map(c => `
+          <a class="wiki-card" href="./profile.html?id=${c.id}">
+            <div class="wiki-card-icon">${iconFor(c)}</div>
+            <div class="wiki-card-name">${c.name.toUpperCase()}</div>
+            <div class="wiki-card-type">${c.typeLabel || c.category}</div>
+          </a>
+        `).join("");
+      }
+
+      search.addEventListener("input", () => {
+        searchQuery = search.value;
+        render();
+      });
+
+      filters.forEach(btn => {
+        btn.addEventListener("click", () => {
+          filters.forEach(b => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          activeFilter = btn.dataset.filter;
+          render();
+        });
+      });
+
+      render();
+    </script>
+
+    <script src="/nav.js"></script>
+  </body>
+</html>

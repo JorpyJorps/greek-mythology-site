@@ -122,7 +122,7 @@ if ('serviceWorker' in navigator) {
     { href: '/games.html',  label: 'Games', icon: '⚔️' },
     { href: '/math.html',   label: 'Math',  icon: '⚡' },
     { href: '/quest.html',  label: 'Quest', icon: '📜' },
-    { href: '/stats.html',  label: 'Stats', icon: '📊' },
+    { href: '/wiki.html',   label: 'Wiki',  icon: '📖' },
   ];
 
   const nav = document.createElement('nav');

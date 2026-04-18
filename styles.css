@@ -1414,6 +1414,7 @@ button {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 8px;
   margin-top: 8px;
+  touch-action: none; /* allow pointer drag on touch without scrolling */
 }
 
 .wordsearch-cell {
@@ -1431,6 +1432,7 @@ button {
   letter-spacing: 0.04em;
   cursor: pointer;
   user-select: none;
+  touch-action: none;
 }
 
 .wordsearch-cell.is-selected {
@@ -2580,13 +2582,13 @@ button {
   }
 
   .wordsearch-grid {
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-    gap: 5px;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 3px;
   }
 
   .wordsearch-cell {
-    font-size: 0.85rem;
-    border-radius: 8px;
+    font-size: 0.75rem;
+    border-radius: 6px;
   }
 
   .secret-canvas {
@@ -3987,4 +3989,141 @@ body.page-maze {
 @media (max-width: 480px) {
   .maze-hud-center { font-size: 0.35rem; }
   .maze-hud-right  { font-size: 0.4rem; }
+}
+
+/* ── Wiki page ───────────────────────────────────────────── */
+body.page-wiki {
+  min-height: 100vh;
+}
+
+.wiki-shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+}
+
+.wiki-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.wiki-title {
+  font-size: 0.6rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+.wiki-search-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.wiki-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 14px;
+  background: rgba(42, 12, 18, 0.85);
+  border: 1px solid rgba(243, 201, 105, 0.25);
+  border-radius: 6px;
+  color: var(--cream);
+  font-family: "Trebuchet MS", sans-serif;
+  font-size: 1rem;
+}
+.wiki-search::placeholder { color: var(--muted); }
+.wiki-search:focus {
+  outline: none;
+  border-color: rgba(243, 201, 105, 0.55);
+}
+
+.wiki-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.wiki-filter-btn {
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.42rem;
+  padding: 8px 14px;
+  border: 2px solid rgba(243, 201, 105, 0.22);
+  background: rgba(42, 12, 18, 0.8);
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  transition: border-color 0.15s, color 0.15s;
+  border-radius: 4px;
+}
+.wiki-filter-btn.is-active,
+.wiki-filter-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.wiki-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.wiki-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 12px 14px;
+  background: rgba(30, 10, 12, 0.7);
+  border: 1px solid rgba(243, 201, 105, 0.14);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: center;
+  cursor: pointer;
+}
+.wiki-card:hover {
+  border-color: rgba(243, 201, 105, 0.5);
+  background: rgba(243, 201, 105, 0.06);
+}
+
+.wiki-card-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.wiki-card-name {
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.42rem;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+}
+
+.wiki-card-type {
+  font-family: "Trebuchet MS", sans-serif;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.wiki-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  font-family: "Trebuchet MS", sans-serif;
+  padding: 40px 0;
+}
+
+/* trivia single-column on very narrow screens */
+@media (max-width: 380px) {
+  .trivia-options {
+    grid-template-columns: 1fr;
+  }
 }
