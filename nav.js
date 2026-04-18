@@ -34,41 +34,46 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // ── Touch swipes ──
-  let tPos = 0;
-  let tStartX = 0, tStartY = 0;
-  const MIN_SWIPE = 30; // px
+  // ── Touch swipes (home screen only) ──
+  const onHomePage = ['/', '/index.html'].includes(location.pathname)
+    || location.pathname.endsWith('/index.html');
 
-  document.addEventListener('touchstart', function (e) {
-    tStartX = e.touches[0].clientX;
-    tStartY = e.touches[0].clientY;
-  }, { passive: true });
+  if (onHomePage) {
+    let tPos = 0;
+    let tStartX = 0, tStartY = 0;
+    const MIN_SWIPE = 30; // px
 
-  document.addEventListener('touchend', function (e) {
-    const dx = e.changedTouches[0].clientX - tStartX;
-    const dy = e.changedTouches[0].clientY - tStartY;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    let gesture;
+    document.addEventListener('touchstart', function (e) {
+      tStartX = e.touches[0].clientX;
+      tStartY = e.touches[0].clientY;
+    }, { passive: true });
 
-    if (dist < 12) {
-      gesture = 'tap';
-    } else if (dist >= MIN_SWIPE) {
-      if (Math.abs(dx) > Math.abs(dy)) {
-        gesture = dx > 0 ? 'right' : 'left';
+    document.addEventListener('touchend', function (e) {
+      const dx = e.changedTouches[0].clientX - tStartX;
+      const dy = e.changedTouches[0].clientY - tStartY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      let gesture;
+
+      if (dist < 12) {
+        gesture = 'tap';
+      } else if (dist >= MIN_SWIPE) {
+        if (Math.abs(dx) > Math.abs(dy)) {
+          gesture = dx > 0 ? 'right' : 'left';
+        } else {
+          gesture = dy > 0 ? 'down' : 'up';
+        }
       } else {
-        gesture = dy > 0 ? 'down' : 'up';
+        return; // too short, ignore
       }
-    } else {
-      return; // too short, ignore
-    }
 
-    if (gesture === TOUCH_CODE[tPos]) {
-      tPos++;
-      if (tPos === TOUCH_CODE.length) { tPos = 0; activate(); }
-    } else {
-      tPos = (gesture === TOUCH_CODE[0]) ? 1 : 0;
-    }
-  }, { passive: true });
+      if (gesture === TOUCH_CODE[tPos]) {
+        tPos++;
+        if (tPos === TOUCH_CODE.length) { tPos = 0; activate(); }
+      } else {
+        tPos = (gesture === TOUCH_CODE[0]) ? 1 : 0;
+      }
+    }, { passive: true });
+  }
 })();
 
 // Inject bottom mobile nav
