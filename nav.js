@@ -18,9 +18,46 @@ if ('serviceWorker' in navigator) {
     'tap','tap'
   ];
 
+  function playKonamiSound() {
+    try {
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+
+      // Rapid ascending run (NES power-up style)
+      const run = [262, 330, 392, 494, 587, 698, 880];
+      run.forEach(function (hz, i) {
+        const osc = ac.createOscillator();
+        const g   = ac.createGain();
+        osc.connect(g); g.connect(ac.destination);
+        osc.type = 'square';
+        osc.frequency.value = hz;
+        const t = ac.currentTime + i * 0.065;
+        g.gain.setValueAtTime(0.14, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+        osc.start(t); osc.stop(t + 0.1);
+      });
+
+      // Triumphant C-major chord landing
+      const landT = ac.currentTime + run.length * 0.065 + 0.06;
+      [523, 659, 784].forEach(function (hz) {
+        const osc = ac.createOscillator();
+        const g   = ac.createGain();
+        osc.connect(g); g.connect(ac.destination);
+        osc.type = 'square';
+        osc.frequency.value = hz;
+        g.gain.setValueAtTime(0.1, landT);
+        g.gain.exponentialRampToValueAtTime(0.001, landT + 0.55);
+        osc.start(landT); osc.stop(landT + 0.6);
+      });
+    } catch (e) { /* audio not available, silent */ }
+  }
+
   function activate() {
+    playKonamiSound();
     localStorage.setItem('secret-maze-easter-egg', 'true');
-    window.location.href = '/secret-challenge.html';
+    // Short delay so the sound plays before page navigates away
+    setTimeout(function () {
+      window.location.href = '/secret-challenge.html';
+    }, 900);
   }
 
   // ── Keyboard ──
