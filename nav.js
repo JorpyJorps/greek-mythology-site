@@ -3,6 +3,29 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
 
+// ── Konami code → Minotaur Maze bypass ───────────────────
+// ↑ ↑ ↓ ↓ ← → ← → B A Enter  (works from any page)
+(function () {
+  const CODE = [
+    'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+    'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight',
+    'b','a','Enter'
+  ];
+  let pos = 0;
+  document.addEventListener('keydown', function (e) {
+    if (e.key === CODE[pos]) {
+      pos++;
+      if (pos === CODE.length) {
+        pos = 0;
+        localStorage.setItem('secret-maze-easter-egg', 'true');
+        window.location.href = '/secret-challenge.html';
+      }
+    } else {
+      pos = (e.key === CODE[0]) ? 1 : 0;
+    }
+  });
+})();
+
 // Inject bottom mobile nav
 (function () {
   const page = location.pathname.split('/').pop() || 'index.html';
