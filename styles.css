@@ -3101,6 +3101,7 @@ body.page-math {
   color: var(--cream);
   cursor: pointer;
   transition: border-color 0.1s, background 0.1s, color 0.1s;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .math-choice:hover:not(:disabled) {

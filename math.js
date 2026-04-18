@@ -336,13 +336,8 @@ function handleAnswer(option, btn) {
     mathFeedback.classList.add(correct ? "is-correct" : "is-wrong");
   }
 
-  // clear button colors before advancing so they don't bleed into next question
+  // renderProblem wipes innerHTML so old highlighted buttons vanish instantly
   const advanceDelay = correct ? 900 : 1400;
-  setTimeout(() => {
-    mathOptions.querySelectorAll(".math-choice").forEach(b => {
-      b.classList.remove("is-correct", "is-wrong");
-    });
-  }, advanceDelay - 200);
   setTimeout(() => renderProblem(), advanceDelay);
 }
 
