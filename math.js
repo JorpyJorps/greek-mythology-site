@@ -5,6 +5,7 @@ const STORAGE_KEY    = "miles-math-progress";
 const BOLT_KEY       = "miles-bolts";
 const EASTER_EGG_KEY = "secret-maze-easter-egg";
 const LEVEL_KEY      = "miles-math-level-override";
+const SFX_KEY        = "miles-sfx";
 
 // ── Constants ─────────────────────────────────────────────
 const DAILY_BOLT_CAP    = 20;   // max bolts earnable from math per day
@@ -19,6 +20,7 @@ const mathOptions    = document.querySelector("#math-options");
 const mathFeedback   = document.querySelector("#math-feedback");
 const mathLevelBadge = document.querySelector("#math-level-badge");
 const mathLevelUp    = document.querySelector("#math-level-up");
+const mathSfxBtn     = document.querySelector("#math-sfx-btn");
 const mathStormFlash = document.querySelector("#math-storm-flash");
 const mathChestFlash = document.querySelector("#math-chest-flash");
 const mathChestTitle = document.querySelector("#math-chest-title");
@@ -290,6 +292,7 @@ function renderProblem() {
 function handleAnswer(option, btn) {
   if (answered) return;
   answered = true;
+  playSelect();
 
   const correct = option === String(currentProblem.answer);
   const prevTier = getUnlockedSecretTier();
@@ -339,6 +342,41 @@ function handleAnswer(option, btn) {
   // renderProblem wipes innerHTML so old highlighted buttons vanish instantly
   const advanceDelay = correct ? 900 : 1400;
   setTimeout(() => renderProblem(), advanceDelay);
+}
+
+// ── Sound ──────────────────────────────────────────────────
+function sfxOn() {
+  return localStorage.getItem(SFX_KEY) !== "off";
+}
+
+function updateSfxBtn() {
+  if (mathSfxBtn) mathSfxBtn.textContent = sfxOn() ? "🔊" : "🔇";
+}
+
+function playSelect() {
+  if (!sfxOn()) return;
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const osc  = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain);
+    gain.connect(ac.destination);
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(360, ac.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(260, ac.currentTime + 0.07);
+    gain.gain.setValueAtTime(0.07, ac.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.09);
+    osc.start(ac.currentTime);
+    osc.stop(ac.currentTime + 0.1);
+  } catch (e) { /* audio not available */ }
+}
+
+if (mathSfxBtn) {
+  updateSfxBtn();
+  mathSfxBtn.addEventListener("click", () => {
+    localStorage.setItem(SFX_KEY, sfxOn() ? "off" : "on");
+    updateSfxBtn();
+  });
 }
 
 // ── Init ───────────────────────────────────────────────────

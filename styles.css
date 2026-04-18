@@ -4128,3 +4128,17 @@ body.page-wiki {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Sound toggle button ────────────────────────────────── */
+.math-sfx-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0.5;
+  padding: 6px;
+  line-height: 1;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.math-sfx-btn:hover { opacity: 1; }
