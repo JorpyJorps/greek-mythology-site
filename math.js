@@ -307,7 +307,7 @@ function handleAnswer(option, btn) {
     progress.bestStreak = Math.max(progress.bestStreak, progress.currentStreak);
     sessionCorrect += 1;
     // earn 1 bolt every BOLT_EVERY correct answers
-    if (progress.dailyCorrect % BOLT_EVERY === 0) addBolt();
+    if (progress.dailyCorrect % BOLT_EVERY === 0) { addBolt(); playGoal(); }
   } else {
     progress.currentStreak = 0;
   }
@@ -356,18 +356,40 @@ function updateSfxBtn() {
 function playSelect() {
   if (!sfxOn()) return;
   try {
-    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const ac   = new (window.AudioContext || window.webkitAudioContext)();
     const osc  = ac.createOscillator();
     const gain = ac.createGain();
     osc.connect(gain);
     gain.connect(ac.destination);
     osc.type = "triangle";
+    // descending blip — quiet confirm tap
     osc.frequency.setValueAtTime(360, ac.currentTime);
     osc.frequency.exponentialRampToValueAtTime(260, ac.currentTime + 0.07);
     gain.gain.setValueAtTime(0.07, ac.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.09);
     osc.start(ac.currentTime);
     osc.stop(ac.currentTime + 0.1);
+  } catch (e) { /* audio not available */ }
+}
+
+function playGoal() {
+  if (!sfxOn()) return;
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    // two ascending notes — reward chime
+    [[0, 380], [0.12, 600]].forEach(([delay, freq]) => {
+      const osc  = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.connect(gain);
+      gain.connect(ac.destination);
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, ac.currentTime + delay);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.08, ac.currentTime + delay + 0.1);
+      gain.gain.setValueAtTime(0.08, ac.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + delay + 0.14);
+      osc.start(ac.currentTime + delay);
+      osc.stop(ac.currentTime + delay + 0.15);
+    });
   } catch (e) { /* audio not available */ }
 }
 

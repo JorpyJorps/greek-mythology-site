@@ -3110,6 +3110,12 @@ body.page-math {
   color: var(--gold);
 }
 
+/* kill browser focus outline on tap; keep for keyboard via focus-visible */
+.math-choice:focus { outline: none; }
+.math-choice:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+/* no pointer events once disabled so no lingering active state */
+.math-choice:disabled { pointer-events: none; }
+
 .math-choice.is-correct {
   border-color: #6ee7a0;
   background: rgba(110, 231, 160, 0.15);

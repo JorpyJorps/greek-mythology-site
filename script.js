@@ -7,10 +7,31 @@ const scrollEl = document.getElementById('scroll-count');
 if (boltEl)   boltEl.textContent   = localStorage.getItem(BOLT_KEY)   || '0';
 if (scrollEl) scrollEl.textContent = localStorage.getItem(SCROLL_KEY) || '0';
 
+// Menu select sound
+function playMenuSelect() {
+  if (localStorage.getItem('miles-sfx') === 'off') return;
+  try {
+    const ac   = new (window.AudioContext || window.webkitAudioContext)();
+    const osc  = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain);
+    gain.connect(ac.destination);
+    osc.type = 'triangle';
+    // slightly brighter descending blip than math select
+    osc.frequency.setValueAtTime(420, ac.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(300, ac.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.09, ac.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.10);
+    osc.start(ac.currentTime);
+    osc.stop(ac.currentTime + 0.11);
+  } catch (e) { /* audio not available */ }
+}
+
 // Lightning flash on menu selection
 const flash = document.getElementById('title-flash');
 document.querySelectorAll('.title-menu-item').forEach(link => {
   link.addEventListener('click', () => {
+    playMenuSelect();
     if (!flash) return;
     flash.classList.remove('is-active');
     requestAnimationFrame(() => flash.classList.add('is-active'));
