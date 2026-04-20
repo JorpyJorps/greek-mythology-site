@@ -1,6 +1,70 @@
 import { questCatalog } from "./quest-data.js";
 import { recordQuestEnding } from "./stats.js";
 
+// ── Maze unlock ────────────────────────────────────────────
+const MAZE_MATH_KEY   = "miles-math-progress";
+const MAZE_SECRET_KEY = "secret-maze-easter-egg";
+const MILESTONE_UNLOCK = 20;
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+}
+
+function triggerMazeUnlock() {
+  // Only run once — if already unlocked today, skip
+  if (localStorage.getItem(MAZE_SECRET_KEY) === "true") return;
+
+  // Boost math progress to milestone if needed
+  try {
+    const raw = localStorage.getItem(MAZE_MATH_KEY);
+    const p = raw ? JSON.parse(raw) : {};
+    if (p.dailyDate === todayKey() && (p.dailyCorrect ?? 0) < MILESTONE_UNLOCK) {
+      p.dailyCorrect = MILESTONE_UNLOCK;
+      localStorage.setItem(MAZE_MATH_KEY, JSON.stringify(p));
+    }
+  } catch (e) {
+    // Don't crash the quest if math storage is broken
+  }
+
+  localStorage.setItem(MAZE_SECRET_KEY, "true");
+
+  // Show celebration overlay after the scroll flash settles
+  setTimeout(() => {
+    showMazeBanner();
+  }, 2200);
+}
+
+function showMazeBanner() {
+  // Build a simple overlay
+  const overlay = document.createElement("div");
+  overlay.id = "maze-unlock-overlay";
+  overlay.style.cssText = [
+    "position:fixed", "inset:0", "z-index:9999",
+    "display:flex", "flex-direction:column",
+    "align-items:center", "justify-content:center",
+    "background:rgba(0,0,0,0.82)", "gap:1rem",
+    "animation:questFadeIn .4s ease"
+  ].join(";");
+
+  overlay.innerHTML = `
+    <div style="font-size:3rem">🏛️</div>
+    <p class="pixel" style="color:#ffd700;font-size:1.1rem;text-align:center;line-height:1.6;margin:0 1rem">
+      MAZE UNLOCKED!
+    </p>
+    <p style="color:#fff;font-size:.85rem;text-align:center;max-width:280px;line-height:1.6;margin:0 1rem;font-family:sans-serif">
+      You can now enter the Minotaur Maze!
+    </p>
+    <button class="button button-gold pixel" style="margin-top:.5rem" id="maze-unlock-close">
+      AWESOME!
+    </button>
+  `;
+
+  document.body.appendChild(overlay);
+  document.getElementById("maze-unlock-close").addEventListener("click", () => {
+    overlay.remove();
+  });
+}
+
 // ── Storage ────────────────────────────────────────────────
 const SCROLL_KEY = "miles-scrolls";
 
@@ -191,6 +255,11 @@ function showEnding(ending) {
   const resultKey = ending.mythTrue ? "legend-path" : (ending.result || "fail");
   const earned = SCROLL_REWARDS[resultKey] ?? 1;
   addScrolls(earned);
+
+  // unlock the maze on a win or legend-path
+  if (ending.mythTrue || ending.result === "win") {
+    triggerMazeUnlock();
+  }
 }
 
 // ── Controls ──────────────────────────────────────────────

@@ -10,93 +10,113 @@ export const questCatalog = [
     start: {
       id: "start",
       text:
-        "Theseus stood at the mouth of the maze. The halls were dark and cold. He tied a red thread near the door. A heavy stomp echoed ahead.",
+        "BOOM. The door slammed shut behind Theseus. Darkness swallowed the maze. The air smelled like wet stone and something alive. He tied Ariadne's red thread near the door. Far ahead — a heavy STOMP. The floor shook. His heart pounded. One choice, right now.",
       choices: [
-        { label: "Follow the wall", next: "wall-path", tone: "careful" },
-        { label: "Walk toward the stomp", next: "stomp-path", tone: "brave" },
-        { label: "Pull out more thread", next: "thread-path", tone: "clever" }
+        { label: "Follow the wall with one hand", next: "wall-path", tone: "careful" },
+        { label: "Run toward the stomp", next: "stomp-path", tone: "brave" },
+        { label: "Unspool the thread and map the halls", next: "thread-path", tone: "clever" }
       ]
     },
     steps: [
       {
         id: "wall-path",
         text:
-          "Theseus slid one hand along the stone wall. The path was quiet here. He saw two turns ahead. One looked wide. One looked safe.",
+          "Stone. Cold and rough under his fingers. Theseus moved inch by inch. The maze stayed quiet — too quiet. Then he smelled it. Something animal. Something huge. Two passages opened ahead. One dark. One darker.",
         choices: [
-          { label: "Take the safe turn", next: "maze-door", tone: "careful" },
-          { label: "Run through the wide hall", next: "fail-charge", tone: "brave" },
-          { label: "Mark the wall with thread", next: "thread-crossing", tone: "clever" }
+          { label: "Take the less dark passage slowly", next: "maze-door", tone: "careful" },
+          { label: "Sprint into the darkest one — surprise it!", next: "brave-charge-win", tone: "brave" },
+          { label: "Tie a thread marker and think", next: "thread-crossing", tone: "clever" }
         ]
       },
       {
         id: "stomp-path",
         text:
-          "Theseus moved toward the sound. Dust shook from the floor. The roar was close now. He knew he had to choose fast.",
+          "BOOM. BOOM. The Minotaur was close. Theseus could feel it in his teeth. Then — silence. The beast had stopped. It was listening for HIM. Theseus froze. He could hear it breathing. Hot breath drifted around the corner.",
         choices: [
-          { label: "Hide behind a stone", next: "maze-door", tone: "careful" },
-          { label: "Rush into the room", next: "fail-charge", tone: "brave" },
-          { label: "Back up and use the thread", next: "thread-crossing", tone: "clever" }
+          { label: "Press flat against the wall and wait", next: "maze-door", tone: "careful" },
+          { label: "Shout and charge — catch it off guard!", next: "brave-shout-win", tone: "brave" },
+          { label: "Lay the thread quietly and back away", next: "thread-crossing", tone: "clever" }
         ]
       },
       {
         id: "thread-path",
         text:
-          "Theseus pulled out more red thread. He tied it at each turn. Soon he came to a dark center hall. The maze felt less confusing now.",
+          "Smart. The red thread unspooled behind him like a trail of bread crumbs. Left turn. Right turn. Dead end — back up. The thread remembered everything. Soon he found a wide hall with tall shadows. The Minotaur had been HERE. The hoofprints were deep in the stone.",
         choices: [
-          { label: "Move slowly and listen", next: "maze-door", tone: "careful" },
-          { label: "Call out to the monster", next: "twist-start", tone: "brave" },
-          { label: "Follow the thread back first", next: "close-call", tone: "clever" }
+          { label: "Move slowly and stay low", next: "maze-door", tone: "careful" },
+          { label: "Yell — make it come to YOU", next: "twist-start", tone: "brave" },
+          { label: "Follow the thread to the center", next: "center-shadow", tone: "clever" }
+        ]
+      },
+      {
+        id: "brave-charge-win",
+        text:
+          "Theseus sprinted into the dark — and fell straight into a hidden chamber! Torches on the walls. A golden shield. And a second door that led AROUND the Minotaur entirely. Theseus laughed out loud. Sometimes the wild choice finds the shortcut.",
+        choices: [
+          { label: "Grab the shield and keep going", next: "center-room", tone: "brave" },
+          { label: "Take the second door carefully", next: "center-shadow", tone: "careful" },
+          { label: "Mark it on the thread and plan the final route", next: "center-room", tone: "clever" }
+        ]
+      },
+      {
+        id: "brave-shout-win",
+        text:
+          "THESEUS ROARED. The Minotaur roared back — and the echo bounced so wildly off the walls that it confused ITSELF. It crashed into a dead-end passage. Theseus heard it bellowing and rattling around in the wrong tunnel. The path ahead was clear!",
+        choices: [
+          { label: "Race for the center room NOW", next: "center-room", tone: "brave" },
+          { label: "Move quietly while it's stuck", next: "center-shadow", tone: "careful" },
+          { label: "Follow the thread to make sure you don't get lost", next: "center-room", tone: "clever" }
         ]
       },
       {
         id: "maze-door",
         text:
-          "Theseus found a bronze door deep in the maze. It was closed, but there was a crack below it. He heard the Minotaur on the other side.",
+          "A bronze door. Old. Heavy. With a crack along the bottom. Something breathed on the other side. Long slow breaths. The Minotaur was resting. Theseus could hear its hooves scrape the floor as it shifted. This was it. The center room was just beyond.",
         choices: [
-          { label: "Stay quiet and wait", next: "center-shadow", tone: "careful" },
-          { label: "Kick the door open", next: "fail-charge", tone: "brave" },
-          { label: "Use the thread to mark the door", next: "center-shadow", tone: "clever" }
+          { label: "Wait for it to move away from the door", next: "center-shadow", tone: "careful" },
+          { label: "KICK IT OPEN and rush in!", next: "fail-charge", tone: "brave" },
+          { label: "Loop the thread through the crack to check the room", next: "center-shadow", tone: "clever" }
         ]
       },
       {
         id: "thread-crossing",
         text:
-          "The thread led Theseus to a four-way crossing. One path smelled like dust. One felt cool. One was full of echoes. One was almost silent.",
+          "Four passages. The thread was a perfect X at his feet. Theseus closed his eyes and thought. One path smelled like mud. One felt cold. One had tiny sounds — dripping water. One was totally silent. Ariadne had told him: follow the cold air. It leads out.",
         choices: [
-          { label: "Take the silent path", next: "center-shadow", tone: "careful" },
-          { label: "Chase the echoes", next: "twist-start", tone: "brave" },
-          { label: "Follow the coolest air", next: "hero-win", tone: "clever" }
+          { label: "Follow the silent path", next: "center-shadow", tone: "careful" },
+          { label: "Chase the dripping — water means a way through!", next: "twist-start", tone: "brave" },
+          { label: "Follow the cold air like Ariadne said", next: "hero-win", tone: "clever" }
         ]
       },
       {
         id: "center-shadow",
         text:
-          "Theseus reached a hall with tall shadows on both sides. He heard hooves scrape the floor ahead. The thread tugged softly behind him like a guide back home.",
+          "The hall widened. Huge shadows stretched up the walls — some of them MOVING. Theseus looked down. Hoofprints, fresh ones, led straight ahead. The thread tugged at his hand like a finger pointing home. Almost there.",
         choices: [
-          { label: "Keep low and move slowly", next: "center-room", tone: "careful" },
-          { label: "Shout and challenge the beast", next: "fail-charge", tone: "brave" },
-          { label: "Check the thread and mark one more turn", next: "center-room", tone: "clever" }
+          { label: "Keep low and creep forward", next: "center-room", tone: "careful" },
+          { label: "Yell and challenge the Minotaur to face you!", next: "fail-charge", tone: "brave" },
+          { label: "Follow the thread and keep it taut", next: "center-room", tone: "clever" }
         ]
       },
       {
         id: "center-room",
         text:
-          "At last Theseus reached the center room. He could hear the Minotaur breathing in the dark. He tightened his grip on the thread and looked for the best move.",
+          "The center room. Round walls. Bones on the floor. A massive shape in the far corner — the Minotaur, huge as a horse, bull-headed, watching with red eyes. It snorted. Hot steam rose from its nostrils. Theseus gripped the thread. This was what he came for.",
         choices: [
-          { label: "Use the thread and stay calm", next: "legend-path", tone: "careful" },
-          { label: "Charge at once", next: "fail-charge", tone: "brave" },
-          { label: "Circle the room first", next: "hero-win", tone: "clever" }
+          { label: "Use the thread as a guide and move calmly", next: "legend-path", tone: "careful" },
+          { label: "CHARGE! Full speed!", next: "fail-charge", tone: "brave" },
+          { label: "Circle the room and find the angle", next: "hero-win", tone: "clever" }
         ]
       }
     ],
     endings: [
       {
         id: "legend-path",
-        title: "Legend Path",
+        title: "The True Legend",
         text:
-          "Theseus stayed calm and used the red thread well. He found the right way through the maze. He moved like the true hero of the story and reached safety.",
+          "Theseus didn't panic. He held the thread. He moved like water — calm, steady. The Minotaur charged. He stepped aside. It crashed into the wall. He used the thread to find his way back through every twist and turn, and walked out into golden sunlight. Ariadne was waiting.",
         epilogue:
-          "When he stepped back into the light, the maze no longer felt bigger than he was. He had followed the path that made him a legend.",
+          "That's the real myth. The thread was everything. Bravery got him IN. Cleverness got him OUT. That's what made Theseus a legend.",
         reward: "Legend reward: True Hero Choice",
         result: "legend",
         mythTrue: true
@@ -105,9 +125,9 @@ export const questCatalog = [
         id: "hero-win",
         title: "Hero Win",
         text:
-          "Theseus made a smart choice and marked the maze well. He did not take the exact path from the old tale, but he still found his way and won.",
+          "Theseus found his own path through. Not exactly the old story — but he made it out, and the Minotaur did NOT. He followed the cold air back to sunlight, thread trailing behind him like a red river.",
         epilogue:
-          "His path was not the old myth exactly, but it was still brave and clever. The maze could not keep him forever.",
+          "Not every hero follows the old map. Sometimes you make your own. That still counts.",
         reward: "Reward: Maze Master",
         result: "win"
       },
@@ -115,9 +135,9 @@ export const questCatalog = [
         id: "close-call",
         title: "Close Call",
         text:
-          "Theseus escaped the danger, but he had to turn back before reaching the center. He made it out safe, though the maze still felt full of secrets.",
+          "Theseus heard the Minotaur coming and made a fast choice: retreat. He followed the thread back at a dead run, burst through the entrance, and slammed the door behind him. Safe.",
         epilogue:
-          "Sometimes the brave choice is knowing when to leave and try again later. The maze is still waiting for another run.",
+          "Running away is not failure. Knowing when to stop is what keeps a hero alive to try again.",
         reward: "Outcome: Safe Escape",
         result: "close"
       },
@@ -125,20 +145,20 @@ export const questCatalog = [
         id: "twist-start",
         title: "Twist Ending",
         text:
-          "Theseus called out into the maze. The sound bounced off the walls and came back at him from every side. He followed the wrong echo and ended up back at the entrance.",
+          "Theseus yelled into the maze. The echo bounced back from a hundred walls — and came back sounding like TEN different people yelling. The Minotaur panicked, crashed through three wrong passages, and ended up blocking its own way out. Theseus jogged past it while it was stuck.",
         epilogue:
-          "The maze almost seemed to laugh at him. At least he learned that not every loud choice is the right one.",
-        reward: "Outcome: Wild Turn",
+          "The maze did the hard work for him. He was too surprised to feel proud. But he made it out.",
+        reward: "Outcome: Echo Trick",
         result: "twist"
       },
       {
         id: "fail-charge",
-        title: "Try Again",
+        title: "Oops! Try Again",
         text:
-          "Theseus rushed too fast into danger. The Minotaur heard him at once. He had to run for the door and try the maze again another time.",
+          "Theseus ran straight at the Minotaur. The Minotaur also ran straight at Theseus. BOOM. He bounced off it like a rubber ball and landed in a pile of old hay. The Minotaur looked at him. He looked at the Minotaur. He ran.",
         epilogue:
-          "Next time he will need more than courage. He will need a cooler head and a better plan.",
-        reward: "Try again: The maze beats rushing",
+          "Even heroes bounce sometimes. Try again!",
+        reward: "Try again: The maze is waiting",
         result: "fail"
       }
     ]
@@ -154,83 +174,93 @@ export const questCatalog = [
     start: {
       id: "start",
       text:
-        "Perseus stepped into the dark cave. Water dripped from the ceiling. He held up his bright shield. Something moved in the shadows ahead.",
+        "The cave was so dark Perseus couldn't see his own hand. Water dripped everywhere. He raised the bronze shield and tilted it — and the tiny reflection showed the cave around him like a flickering mirror. Something moved deep inside. Something that turned everything it touched to stone.",
       choices: [
-        { label: "Look into the shield", next: "shield-path", tone: "clever" },
-        { label: "Walk straight ahead", next: "rush-path", tone: "brave" },
-        { label: "Listen for a sound", next: "listen-path", tone: "careful" }
+        { label: "Watch the cave through the shield reflection", next: "shield-path", tone: "clever" },
+        { label: "Walk straight ahead — he's brave enough", next: "rush-path", tone: "brave" },
+        { label: "Stop and listen for sounds first", next: "listen-path", tone: "careful" }
       ]
     },
     steps: [
       {
         id: "shield-path",
         text:
-          "Perseus watched the cave in the shine of the shield. A shape moved behind a rock. He kept his eyes low and his steps slow.",
+          "The shield showed everything backwards and tiny — but it was enough. A shape behind a rock. Snakes moving. Eyes like headlights. Perseus kept his own eyes glued to the reflection and breathed very, very slowly.",
         choices: [
-          { label: "Step around the rock", next: "stone-bridge", tone: "careful" },
-          { label: "Raise the shield higher", next: "echo-room", tone: "clever" },
-          { label: "Run deeper into the cave", next: "close-call", tone: "brave" }
+          { label: "Step sideways around the rock, eyes down", next: "stone-bridge", tone: "careful" },
+          { label: "Angle the shield higher for a better view", next: "echo-room", tone: "clever" },
+          { label: "Hold the shield up and just walk forward boldly", next: "brave-shield-walk", tone: "brave" }
         ]
       },
       {
         id: "rush-path",
         text:
-          "Perseus took three quick steps into the cave. A hiss rose in the dark. The air felt cold and dangerous around him.",
+          "Perseus took three big steps into the cave — and immediately heard a hiss so loud it bounced off every wall at once. The air went cold. Very cold. He could feel the cave going STILL around him. He needed to do something smart, right now.",
         choices: [
-          { label: "Jump back", next: "stone-bridge", tone: "careful" },
-          { label: "Use the shield now", next: "echo-room", tone: "clever" },
-          { label: "Keep running", next: "fail-stare", tone: "brave" }
+          { label: "Jump sideways and press against the wall", next: "stone-bridge", tone: "careful" },
+          { label: "Whip up the shield and look through it", next: "echo-room", tone: "clever" },
+          { label: "Keep charging — he came this far!", next: "fail-stare", tone: "brave" }
         ]
       },
       {
         id: "listen-path",
         text:
-          "Perseus stopped and listened. He heard a scrape of stone and a soft hiss. He could still choose a smart path before the danger saw him.",
+          "Perseus held his breath. Scrape. Scrape. A soft hiss. Then — nothing. The danger didn't know he was here yet. He still had time to pick his move. Every second he stayed still was one more second of advantage.",
         choices: [
-          { label: "Use the shield reflection", next: "stone-bridge", tone: "clever" },
-          { label: "Throw a rock to distract it", next: "twist-ending", tone: "brave" },
-          { label: "Back out of the cave", next: "close-call", tone: "careful" }
+          { label: "Use the shield reflection to move forward", next: "stone-bridge", tone: "clever" },
+          { label: "Throw a rock to make noise somewhere else", next: "twist-ending", tone: "brave" },
+          { label: "Back slowly toward the entrance", next: "close-call", tone: "careful" }
+        ]
+      },
+      {
+        id: "brave-shield-walk",
+        text:
+          "Perseus raised the shield like a lantern and walked forward with giant steady steps — CLANG, CLANG, CLANG. The Medusa heard him and turned toward the sound. But she turned toward the SOUND of the shield, not his face. He was already past her on the left.",
+        choices: [
+          { label: "Keep moving, eyes on the reflection only", next: "echo-room", tone: "careful" },
+          { label: "Make MORE noise — confuse her further!", next: "echo-room", tone: "brave" },
+          { label: "Use the noise as cover to get around her", next: "hero-win", tone: "clever" }
         ]
       },
       {
         id: "stone-bridge",
         text:
-          "Perseus found a narrow stone bridge over a dark crack in the cave floor. The air was still here. One wrong step could make a loud noise.",
+          "A narrow stone bridge over a black crack in the floor. One wrong step — SPLASH — and the cave would know exactly where Perseus was. He looked at the reflection in the shield. Something large was moving behind him, slowly.",
         choices: [
-          { label: "Walk slowly with the shield", next: "mirror-pool", tone: "careful" },
-          { label: "Run across fast", next: "fail-stare", tone: "brave" },
-          { label: "Tap each stone first", next: "mirror-pool", tone: "clever" }
+          { label: "Walk slowly heel-to-toe with the shield up", next: "mirror-pool", tone: "careful" },
+          { label: "Sprint across before it gets close!", next: "fail-stare", tone: "brave" },
+          { label: "Test each stone first with one foot", next: "mirror-pool", tone: "clever" }
         ]
       },
       {
         id: "mirror-pool",
         text:
-          "Beyond the bridge, Perseus found a still black pool. The shield and the water both gave back little flashes of the cave. He could use that shine to move one step closer.",
+          "A still black pool. The shield AND the pool both showed tiny reflections. Together they were like two mirrors pointing at each other — Perseus could see almost the whole cave at once. He saw Medusa. She was close. She hadn't seen him yet.",
         choices: [
-          { label: "Watch the pool and keep your eyes low", next: "echo-room", tone: "careful" },
-          { label: "Rush past before anything moves", next: "close-call", tone: "brave" },
-          { label: "Angle the shield toward the pool", next: "echo-room", tone: "clever" }
+          { label: "Watch both reflections and move along the wall", next: "echo-room", tone: "careful" },
+          { label: "Use the double reflection to get close — then strike!", next: "echo-room", tone: "brave" },
+          { label: "Angle the shield to use both reflections perfectly", next: "legend-path", tone: "clever" }
         ]
       },
       {
         id: "echo-room",
         text:
-          "Perseus entered a round room where every sound came back twice. In the shield, he saw danger moving near the far wall. He had one smart chance left.",
+          "A round room where every sound came back twice. The shield showed Medusa near the far wall — her snakes moving, her eyes sweeping left and right. One clear chance. One direction where she wasn't looking. Perseus's hand tightened on the sword.",
         choices: [
-          { label: "Use the shield and avoid a direct look", next: "legend-path", tone: "careful" },
-          { label: "Race for the door", next: "close-call", tone: "brave" },
-          { label: "Move by the wall and keep the shield up", next: "hero-win", tone: "clever" }
+          { label: "Use the shield and look away — let the reflection guide the strike", next: "legend-path", tone: "careful" },
+          { label: "Race for the door right now while her back is partly turned", next: "close-call", tone: "brave" },
+          { label: "Move along the wall and keep the shield between you", next: "hero-win", tone: "clever" }
         ]
       }
     ],
     endings: [
       {
         id: "legend-path",
-        title: "Legend Path",
+        title: "The True Legend",
         text:
-          "Perseus used the shield the right way and never stared straight at danger. That was the smart move from the old myth. He made it through like a true legend.",
+          "Perseus kept his eyes on the reflection. Not once did he look directly at Medusa. His sword arm moved on its own — guided by nothing but the tiny upside-down image in the shield. One clean strike. Then silence. Then the cave was just a cave again.",
         epilogue:
-          "His courage mattered, but his careful thinking mattered just as much. That is what made this the true myth path.",
+          "That's exactly how the myth goes. The shield wasn't just a weapon — it was the only tool that worked. Perseus walked out carrying something no one else had ever managed to bring back.",
         reward: "Legend reward: Myth Master Move",
         result: "legend",
         mythTrue: true
@@ -239,9 +269,9 @@ export const questCatalog = [
         id: "hero-win",
         title: "Hero Win",
         text:
-          "Perseus stayed brave and careful. He used the shield to keep himself safe and found a clear path out of the cave.",
+          "Perseus found his way through. Not exactly the old story path — but he used the shield well, kept his eyes down, and got the job done. The cave spat him out on the other side, slightly shaky but definitely victorious.",
         epilogue:
-          "It was not the exact old-story path, but it was still the work of a smart hero with steady nerves.",
+          "Smart choices look different every time. He was still brave. He was still clever. He still won.",
         reward: "Reward: Shield Smart",
         result: "win"
       },
@@ -249,9 +279,9 @@ export const questCatalog = [
         id: "close-call",
         title: "Close Call",
         text:
-          "Perseus escaped, but he had to leave before he finished the quest. He stayed safe, even if the cave still held its mystery.",
+          "Perseus decided the cave wasn't worth the risk today. He backed toward the entrance, step by step, eyes on the reflection until he felt sunlight on his back. He'd come back with a better plan.",
         epilogue:
-          "The cave kept its secret for one more day. Perseus lived to return with a better plan.",
+          "The cave kept its secret one more day. Perseus kept his head. Both good outcomes, honestly.",
         reward: "Outcome: Narrow Escape",
         result: "close"
       },
@@ -259,20 +289,20 @@ export const questCatalog = [
         id: "twist-ending",
         title: "Twist Ending",
         text:
-          "The rock bounced off the cave wall and made a loud crash. Bats flew everywhere. Perseus laughed, ducked low, and hurried out through the fluttering dark.",
+          "Perseus threw a rock deep into the cave. It bounced, cracked, and knocked over a pile of old pottery that clanged around the cave for a full thirty seconds. When the noise stopped, he heard Medusa on the complete other side of the cave, totally confused. He walked past her in the silence.",
         epilogue:
-          "It was messy, noisy, and not at all graceful, but it made for a great story on the way home.",
-        reward: "Outcome: Bat Storm",
+          "Sometimes the messiest plan works the best. He still isn't sure how.",
+        reward: "Outcome: Pottery Chaos",
         result: "twist"
       },
       {
         id: "fail-stare",
-        title: "Try Again",
+        title: "Oops! Try Again",
         text:
-          "Perseus moved too fast and forgot the safest rule. He had to leap away and escape before the danger closed in. Next time, he will need a smarter plan.",
+          "Perseus moved too fast — and accidentally looked up for exactly half a second. He saw something he definitely should not have. He slammed his eyes shut and ran for the entrance at full speed, bouncing off walls the whole way. He made it out. His eyes stayed shut for a while after, just in case.",
         epilogue:
-          "Some quests cannot be won by rushing. The shield must lead the way next time.",
-        reward: "Try again: Slow down and think",
+          "The shield is there for a reason! Try again — and keep those eyes DOWN.",
+        reward: "Try again: Shield first, always",
         result: "fail"
       }
     ]
@@ -288,93 +318,93 @@ export const questCatalog = [
     start: {
       id: "start",
       text:
-        "Heracles stood near a dark swamp. Mist rolled over the water. He held a bright torch in one hand. In the reeds, something large began to move.",
+        "Heracles was the strongest man alive. He once held up the sky. He once wrestled a river. And yet the Lernaean Hydra still made his stomach drop. Nine heads. NINE. And every time you cut one off — two more grew back. He stood at the swamp edge. The torch in his hand was as tall as a child. Something enormous rose from the reeds.",
       choices: [
-        { label: "Walk into the swamp", next: "swamp-path", tone: "brave" },
-        { label: "Hold the torch high", next: "torch-path", tone: "clever" },
-        { label: "Wait and watch", next: "watch-path", tone: "careful" }
+        { label: "Wade into the swamp to meet it", next: "swamp-path", tone: "brave" },
+        { label: "Hold the torch high and study the beast", next: "torch-path", tone: "clever" },
+        { label: "Wait and watch how it moves", next: "watch-path", tone: "careful" }
       ]
     },
     steps: [
       {
         id: "swamp-path",
         text:
-          "Heracles splashed into the muddy water. The ground was soft under his feet. He heard a low growl near the reeds.",
+          "SPLASH. Heracles waded in, mud sucking at his boots. The Hydra rose from the water — all nine heads swaying like a horrible tree. 'ROAR!' He grabbed the nearest neck and WHACK — cut the head clean off. Then he heard it. A wet gurgling noise. And two new heads pushed out of the stump.",
         choices: [
-          { label: "Charge at the sound", next: "fail-charge", tone: "brave" },
-          { label: "Step back to firm ground", next: "dry-path", tone: "careful" },
-          { label: "Lift the torch and look", next: "reed-path", tone: "clever" }
+          { label: "KEEP CUTTING — more cuts, more wins!", next: "fail-more-heads", tone: "brave" },
+          { label: "Back up to dry ground and think", next: "dry-path", tone: "careful" },
+          { label: "Shove the torch at the neck stump — fire might stop the growing!", next: "reed-path", tone: "clever" }
         ]
       },
       {
         id: "torch-path",
         text:
-          "The torchlight showed a safer path by the dry edge of the swamp. Heracles could see where the mud was deep and where the reeds were thin.",
+          "The torchlight showed all nine heads clearly. They each moved differently — some fast, some slow. Heracles remembered something his nephew Iolaus had said: 'The heads grow back. But fire closes the wound.' The torch in his hand suddenly felt more important than his sword.",
         choices: [
-          { label: "Follow the dry path", next: "dry-path", tone: "careful" },
-          { label: "Swing the torch in the air", next: "twist-ending", tone: "brave" },
-          { label: "Call out to the beast", next: "close-call", tone: "clever" }
+          { label: "Take the dry path around to get closer safely", next: "dry-path", tone: "careful" },
+          { label: "Wave the torch at all nine heads at once — scare them!", next: "twist-ending", tone: "brave" },
+          { label: "Target just the biggest head first, then torch the stump", next: "reed-path", tone: "clever" }
         ]
       },
       {
         id: "watch-path",
         text:
-          "Heracles stayed still and watched the swamp. Soon he saw bubbles in one place and broken reeds in another. Now he knew where danger was hiding.",
+          "Heracles stayed very still. The Hydra sniffed the air — all nine heads sniffing in different directions. It couldn't find him. He noticed something: the heads in the center moved slower. And beneath the water, he could see where the beast's body was. One solid target.",
         choices: [
-          { label: "Move around the reeds", next: "dry-path", tone: "careful" },
-          { label: "Leap toward the bubbles", next: "fail-charge", tone: "brave" },
-          { label: "Use the torch to test the mud", next: "reed-path", tone: "clever" }
+          { label: "Move carefully to dry ground for a better position", next: "dry-path", tone: "careful" },
+          { label: "Jump at the slow center head — NOW!", next: "fail-more-heads", tone: "brave" },
+          { label: "Use the torch on the body — where the heads connect", next: "reed-path", tone: "clever" }
+        ]
+      },
+      {
+        id: "fail-more-heads",
+        text:
+          "Heracles swung his sword left, right, up, down. CUT. CUT. CUT. And with every cut — pop, pop, pop — two new heads sprouted. He stopped and stared. He now faced seventeen heads. They all looked at him at the same time. He counted again. Still seventeen.",
+        choices: [
+          { label: "Stop cutting. Back away slowly.", next: "dry-path", tone: "careful" },
+          { label: "FINE. Cut FASTER.", next: "fail-charge", tone: "brave" },
+          { label: "The torch! The torch is the answer!", next: "reed-path", tone: "clever" }
         ]
       },
       {
         id: "dry-path",
         text:
-          "Heracles found a strip of dry ground beside the swamp. The torch showed old footprints there. The beast was close, but the path was safer than the mud.",
+          "Dry ground. Finally. Heracles caught his breath. The Hydra lurked in the water nearby. He could hear all nine heads splashing. He couldn't beat it by fighting the way he usually fought. He needed a different kind of strength — the kind that thinks.",
         choices: [
-          { label: "Stay on the dry ground", next: "reed-gate", tone: "careful" },
-          { label: "Jump off the path", next: "fail-charge", tone: "brave" },
-          { label: "Test the ground with the torch", next: "reed-gate", tone: "clever" }
+          { label: "Circle the swamp to find the best attack point", next: "reed-gate", tone: "careful" },
+          { label: "Leap back in and fight harder than ever!", next: "fail-charge", tone: "brave" },
+          { label: "Heat the torch as hot as possible and aim for the stumps", next: "reed-path", tone: "clever" }
         ]
       },
       {
         id: "reed-path",
         text:
-          "The reeds opened to a dark pool. Heracles heard the beast breathing nearby. He could fight wildly, or he could make one smart final move.",
+          "Heracles swung hard — and burned the stump the instant the head fell. The neck went dark. Nothing grew. He let out a massive shout. THAT was how you did it. He just had to be fast enough: cut and burn, cut and burn. Eight heads to go.",
         choices: [
-          { label: "Circle the pool slowly", next: "reed-gate", tone: "careful" },
-          { label: "Roar and rush in", next: "fail-charge", tone: "brave" },
-          { label: "Hold the torch low and watch the reeds", next: "hero-win", tone: "clever" }
+          { label: "Work steadily through each one", next: "reed-gate", tone: "careful" },
+          { label: "Cut and torch as FAST AS POSSIBLE!", next: "hero-win", tone: "brave" },
+          { label: "Save the immortal center head for last — that one needs a rock, not fire", next: "reed-gate", tone: "clever" }
         ]
       },
       {
         id: "reed-gate",
         text:
-          "At the far end of the reeds, Heracles found a narrow gate of roots and mud. The beast was just beyond it. One path looked solid, and one looked quick but risky.",
+          "One head left. The immortal one. Fire hadn't worked on it. Heracles stared at it. It stared back. Then he saw a heavy flat boulder near the swamp's edge — the kind you could bury something under. Iolaus had mentioned this too.",
         choices: [
-          { label: "Take the solid path", next: "beast-den", tone: "careful" },
-          { label: "Break through the roots", next: "fail-charge", tone: "brave" },
-          { label: "Use the torch to test each step", next: "beast-den", tone: "clever" }
-        ]
-      },
-      {
-        id: "beast-den",
-        text:
-          "At the edge of the beast's den, Heracles saw deep mud, broken reeds, and one safe way forward. He had the strength to charge, but wisdom would decide the quest.",
-        choices: [
-          { label: "Take the safe way and stay steady", next: "legend-path", tone: "careful" },
-          { label: "Charge into the dark", next: "fail-charge", tone: "brave" },
-          { label: "Use the torch to guide each step", next: "hero-win", tone: "clever" }
+          { label: "Bury the immortal head under the boulder", next: "legend-path", tone: "careful" },
+          { label: "Hit it so hard it CAN'T grow back", next: "fail-charge", tone: "brave" },
+          { label: "Roll the boulder over it while the head is distracted", next: "hero-win", tone: "clever" }
         ]
       }
     ],
     endings: [
       {
         id: "legend-path",
-        title: "Legend Path",
+        title: "The True Legend",
         text:
-          "Heracles used both strength and smart thinking. He stayed out of the deepest mud and chose the safest way forward. Like the best hero tales, he won by more than muscle alone.",
+          "Cut and torch. Cut and torch. Eight heads down, one to go — the one that couldn't die. Heracles didn't try to kill it. He rolled the massive boulder right on top of it and held it there with both hands until the swamp went still. Done.",
         epilogue:
-          "The swamp did not beat him, because he used wisdom as well as power. That is what made this the strongest ending.",
+          "That's the real story. The Hydra wasn't beaten by the strongest arms in Greece — it was beaten by the right tool at the right time. Heracles was smart enough to figure that out. Eventually.",
         reward: "Legend reward: True Hero Strength",
         result: "legend",
         mythTrue: true
@@ -383,9 +413,9 @@ export const questCatalog = [
         id: "hero-win",
         title: "Hero Win",
         text:
-          "Heracles made a strong and smart choice. He did not follow the exact old-story path, but he still got through the swamp and won the day.",
+          "Heracles found his own version of the cut-and-torch method and worked through every head as fast as he possibly could. His arm was on fire (not literally, but almost) by the end. The Hydra finally sank into the swamp. He collapsed on dry ground and stared at the sky.",
         epilogue:
-          "He found a good ending by trusting both his hands and his head. That still counts as a hero's win.",
+          "He found his own way to the right answer. Strength AND brains. That's a hero's win.",
         reward: "Reward: Swamp Survivor",
         result: "win"
       },
@@ -393,9 +423,9 @@ export const questCatalog = [
         id: "close-call",
         title: "Close Call",
         text:
-          "Heracles scared the beast away, but he had to leave before finishing the whole quest. It was a brave escape and a near win.",
+          "Heracles scared the Hydra back into the deep water, bought himself time, and got out of the swamp before it came back. He lived. He'd try again with a better plan and a bigger torch.",
         epilogue:
-          "The beast slipped back into the reeds, and the swamp stayed dangerous. Heracles would need another chance to finish the job.",
+          "A live hero with a plan beats a reckless hero every time. The swamp will still be there.",
         reward: "Outcome: Near Victory",
         result: "close"
       },
@@ -403,20 +433,20 @@ export const questCatalog = [
         id: "twist-ending",
         title: "Twist Ending",
         text:
-          "Heracles swung the torch in a huge circle. The light scared a flock of birds out of the reeds. He laughed as they burst into the air and raced above the swamp.",
+          "Heracles swung the torch in a huge blazing circle above his head and let out the loudest war cry in Greek history. Every single frog, bird, fish, and swamp creature within a mile launched itself into the air at once. The Hydra got so spooked by the sudden wall of noise and wings that it dove underwater and didn't come back up for an hour. Heracles used the hour to make a better plan.",
         epilogue:
-          "He did not find the beast, but he turned the swamp into a wild flashing storm of wings and light.",
-        reward: "Outcome: Torch Tornado",
+          "Sometimes winning means buying yourself time. And nobody has ever cleared a swamp faster.",
+        reward: "Outcome: Swamp Panic",
         result: "twist"
       },
       {
         id: "fail-charge",
-        title: "Try Again",
+        title: "Oops! Try Again",
         text:
-          "Heracles rushed at the wrong moment. The mud slowed him down, and the beast slipped away into the swamp. He would need a better plan next time.",
+          "Heracles cut heads. More heads appeared. He cut those. Even more heads appeared. He stopped and counted: twenty-three heads. Twenty-THREE. One of them sneezed on him. He retreated from the swamp at top speed and did not look back.",
         epilogue:
-          "Even the strongest hero can lose to bad footing and bad timing. Next time, the swamp must be read before it is fought.",
-        reward: "Try again: Strength needs a plan",
+          "The sword alone cannot beat the Hydra. Fire is the key! Try again.",
+        reward: "Try again: Use the torch on the stumps!",
         result: "fail"
       }
     ]
@@ -432,83 +462,83 @@ export const questCatalog = [
     start: {
       id: "start",
       text:
-        "Odysseus stood by tall sea cliffs as waves crashed below. He wrapped a strong rope around his arm. Somewhere over the water, a strange song floated through the mist.",
+        "The song was beautiful. That was the dangerous part. Odysseus stood at the cliff edge and felt it pulling at him like a hook in his chest. The Sirens sang from the rocks below, and every note said: come closer, just a little closer. He wrapped his rope around his wrist and thought hard. No hero had survived this before. Odysseus planned to be the first.",
       choices: [
-        { label: "Listen from far away", next: "mist-path", tone: "careful" },
-        { label: "Walk toward the song", next: "song-path", tone: "brave" },
-        { label: "Tie the rope to a stone post", next: "rope-path", tone: "clever" }
+        { label: "Listen from far away — don't get closer yet", next: "mist-path", tone: "careful" },
+        { label: "Walk toward the song — understand it better", next: "song-path", tone: "brave" },
+        { label: "Tie the rope to a stone post NOW before the song gets louder", next: "rope-path", tone: "clever" }
       ]
     },
     steps: [
       {
         id: "mist-path",
         text:
-          "Odysseus stayed near the cliff wall. The song rose and fell with the wind. He saw two narrow paths ahead. One was bright with sea spray. One was shaded and quiet.",
+          "Odysseus pressed against the cliff wall and breathed steadily. The song rose and fell. He noticed something: it was louder on the sea side and quieter on the stone side. The wall itself blocked some of it. Two paths branched ahead — one bright, one shadowed.",
         choices: [
-          { label: "Take the quiet path", next: "cliff-turn", tone: "careful" },
-          { label: "Run down the bright path", next: "fail-song", tone: "brave" },
-          { label: "Anchor the rope first", next: "rope-gate", tone: "clever" }
+          { label: "Take the shadowed path — it's quieter", next: "cliff-turn", tone: "careful" },
+          { label: "Run fast down the bright path before the song catches him", next: "fail-song", tone: "brave" },
+          { label: "Anchor the rope to the cliff wall before moving at all", next: "rope-gate", tone: "clever" }
         ]
       },
       {
         id: "song-path",
         text:
-          "Odysseus stepped closer to the song. The music sounded sweet, but the rocks below looked sharp and black. He knew beautiful things could still be dangerous.",
+          "The song got louder. And louder. Odysseus felt his feet moving forward before he'd decided to move them. The rocks below were sharp and black. He shook his head hard — once, twice. He knew this trick. Knowing it was a trick almost wasn't enough.",
         choices: [
-          { label: "Step back and think", next: "cliff-turn", tone: "careful" },
-          { label: "Call back to the voices", next: "twist-ending", tone: "brave" },
-          { label: "Use the rope to hold fast", next: "rope-gate", tone: "clever" }
+          { label: "Pull himself back and think clearly", next: "cliff-turn", tone: "careful" },
+          { label: "Call back to the Sirens — maybe they'll ANSWER", next: "twist-ending", tone: "brave" },
+          { label: "Grab the rope and anchor to the nearest rock — fast", next: "rope-gate", tone: "clever" }
         ]
       },
       {
         id: "rope-path",
         text:
-          "Odysseus tied the rope tight to an old stone post. The wind pulled at him, but the rope held. Now he could move and still keep himself from rushing toward danger.",
+          "The rope was tied. Good. Even if the song made him forget everything else, the rope would hold. He tested it — tight. He could now move forward and explore, knowing the rope would stop him before the cliffs did. Clever Odysseus. He almost smiled.",
         choices: [
-          { label: "Follow the wall slowly", next: "cliff-turn", tone: "careful" },
-          { label: "Lean toward the song", next: "close-call", tone: "brave" },
-          { label: "Keep the rope tight and move on", next: "rope-gate", tone: "clever" }
+          { label: "Follow the cliff wall slowly, rope tight", next: "cliff-turn", tone: "careful" },
+          { label: "Lean out toward the song — see how far the rope lets him go", next: "close-call", tone: "brave" },
+          { label: "Keep the rope tight and move toward the sea arch", next: "rope-gate", tone: "clever" }
         ]
       },
       {
         id: "cliff-turn",
         text:
-          "At a bend in the cliff path, Odysseus found broken shells and old rope marks in the stone. Someone else had stood here before and chosen badly.",
+          "At the bend, Odysseus found something: scratch marks in the stone. NAMES. Other sailors who'd been here. None of the names were famous for surviving. He stood very still and thought about that. The song floated up from below, sweet as honey, deadly as a wave.",
         choices: [
-          { label: "Stay by the rock wall", next: "rope-gate", tone: "careful" },
-          { label: "Climb onto the edge", next: "fail-song", tone: "brave" },
-          { label: "Test the ground with the rope", next: "rope-gate", tone: "clever" }
+          { label: "Stay pressed against the rock wall and move carefully", next: "rope-gate", tone: "careful" },
+          { label: "Climb up onto the cliff edge to see the Sirens directly!", next: "fail-song", tone: "brave" },
+          { label: "Use the rope to test the ground ahead before each step", next: "rope-gate", tone: "clever" }
         ]
       },
       {
         id: "rope-gate",
         text:
-          "The path opened to a stone arch facing the sea. The song was loud now. Odysseus had one last choice before the cliffs dropped away below him.",
+          "A stone arch over the path, and beyond it — the open sea, churning white. The song was loudest here. Odysseus noticed that if he hummed something else, another tune, really loudly inside his own head — it helped block the Sirens out. He tried it. It helped.",
         choices: [
-          { label: "Keep tied and trust your plan", next: "sea-arch", tone: "careful" },
-          { label: "Break free and race forward", next: "fail-song", tone: "brave" },
-          { label: "Use the rope to guide each step", next: "sea-arch", tone: "clever" }
+          { label: "Keep humming, keep moving, keep the rope tight", next: "sea-arch", tone: "careful" },
+          { label: "Untie the rope — he wants to get close enough to SEE them", next: "fail-song", tone: "brave" },
+          { label: "Hum loudly and use the rope-length to stay safe under the arch", next: "sea-arch", tone: "clever" }
         ]
       },
       {
         id: "sea-arch",
         text:
-          "Under the arch, Odysseus could hear the full pull of the singing. The sea flashed below, and the rope pulled steady at his waist. Cleverness would decide the ending now.",
+          "Under the arch. The full weight of the song hit him. His knees actually wobbled. The rope pulled tight at his waist. Below: the rocks, the sea, the Sirens on their island. He could see them now — beautiful, terrible, singing just for him. The rope was the only thing between him and disaster.",
         choices: [
-          { label: "Ignore the song and move past it", next: "legend-path", tone: "careful" },
-          { label: "Leap toward the voices", next: "fail-song", tone: "brave" },
-          { label: "Use the rope and slip by the edge", next: "hero-win", tone: "clever" }
+          { label: "Keep his eyes forward, hum, trust the rope, and walk past", next: "legend-path", tone: "careful" },
+          { label: "Leap toward the voices — just to get closer —", next: "fail-song", tone: "brave" },
+          { label: "Use the rope like a guide rail and slip along the cliff edge past them", next: "hero-win", tone: "clever" }
         ]
       }
     ],
     endings: [
       {
         id: "legend-path",
-        title: "Legend Path",
+        title: "The True Legend",
         text:
-          "Odysseus trusted the rope and his careful plan. He passed the danger without giving in to the song. That is the truest path for the clever hero of the Odyssey.",
+          "Odysseus walked past the Sirens with his eyes straight ahead, humming a sailor's song so loudly he couldn't hear his own thoughts. The rope pulled tight twice. Twice he stopped, breathed, and kept going. When the song faded behind him, he finally let himself smile. He was the first to hear the Sirens and survive.",
         epilogue:
-          "He won because he planned ahead and did not trust the sweet voices. The sea still roared, but it did not trick him.",
+          "That's the real Odyssey. He WANTED to hear them — so he found a way to do it safely. Not brave enough to ignore the danger. Not careful enough to skip it. Perfectly, exactly Odysseus.",
         reward: "Legend reward: Sea-Clever Choice",
         result: "legend",
         mythTrue: true
@@ -517,9 +547,9 @@ export const questCatalog = [
         id: "hero-win",
         title: "Hero Win",
         text:
-          "Odysseus stayed smart and used the rope well. He found a safe way beyond the cliff path and left the singing behind him.",
+          "Odysseus used the rope and the cliff wall and his own humming to push through. He slipped past the sea arch like a shadow. The Sirens' song faded. The sea opened ahead of him. He'd made it through — not the old story exactly, but HIS way.",
         epilogue:
-          "It was not the exact old-story version, but it still felt like the work of a hero who wins with brains first.",
+          "Odysseus always found his own version of clever. That's why they still tell stories about him.",
         reward: "Reward: Stormy Escape",
         result: "win"
       },
@@ -527,9 +557,9 @@ export const questCatalog = [
         id: "close-call",
         title: "Close Call",
         text:
-          "Odysseus pulled away from the song just in time. He escaped the cliffs, but he had to leave the path unfinished.",
+          "The rope pulled tight and Odysseus couldn't make himself let go of the cliff. He held on until the song changed direction, then scrambled back the way he came. He was shaking. He made it out. He'd need wax for his sailors' ears next time.",
         epilogue:
-          "The voices faded behind him, and that alone was a victory. Next time he may find the stronger ending.",
+          "Knowing when you're losing is a kind of cleverness too. He kept his life and his plan.",
         reward: "Outcome: Narrow Escape",
         result: "close"
       },
@@ -537,20 +567,20 @@ export const questCatalog = [
         id: "twist-ending",
         title: "Twist Ending",
         text:
-          "Odysseus called back to the singing, and a flock of sea birds burst out of the mist instead. The song vanished at once, and only the birds answered him.",
+          "Odysseus called back to the Sirens, imitating their own tune — badly but loudly. They stopped singing. There was a long pause. Then, from the rocks below, a very irritated voice said: 'That is NOT how it goes.' A seagull flew into his face. He escaped while they were still complaining about his singing.",
         epilogue:
-          "He laughed at the strange trick of the sea. Even when the path went oddly, it still made a good tale.",
-        reward: "Outcome: Sea Bird Surprise",
+          "Even the Sirens were not ready for someone to argue with their performance. Only Odysseus could pull that off.",
+        reward: "Outcome: Musical Disagreement",
         result: "twist"
       },
       {
         id: "fail-song",
-        title: "Try Again",
+        title: "Oops! Try Again",
         text:
-          "Odysseus moved too close to the singing and forgot his careful plan. He had to grab the rope and pull himself back before the cliffs won.",
+          "Odysseus moved toward the song. Just a little closer. Just to hear it better. His foot found the edge of the cliff. He looked down. The rocks were very, very far below. He grabbed the rope with both hands and pulled himself back, sweating. He sat down on the cliff path and took six deep breaths.",
         epilogue:
-          "The sea is not a place for rushed choices. Next time he must trust his plan from the very start.",
-        reward: "Try again: Clever beats rushing",
+          "The rope is there for a reason. The ROPE is always the answer. Try again!",
+        reward: "Try again: Trust the rope, not the song",
         result: "fail"
       }
     ]
@@ -566,94 +596,104 @@ export const questCatalog = [
     start: {
       id: "start",
       text:
-        "Atalanta stood on a forest trail with her bow ready. The trees were tall and quiet. Ahead, a wild beast crashed through the brush and shook the leaves.",
+        "Atalanta was faster than anyone alive. She could outrun horses. She'd beaten every man who'd ever raced her. And today she was hunting the Calydonian Boar — a beast as big as a cart, with tusks like swords. It had already wrecked three villages. The other hunters were still at camp. Atalanta was already on its trail.",
       choices: [
-        { label: "Move silently between the trees", next: "tree-path", tone: "careful" },
-        { label: "Race after the beast", next: "rush-path", tone: "brave" },
-        { label: "Nock an arrow and study the trail", next: "bow-path", tone: "clever" }
+        { label: "Move silently between the trees — don't spook it", next: "tree-path", tone: "careful" },
+        { label: "Sprint ahead and cut it off before it reaches the ridge", next: "rush-path", tone: "brave" },
+        { label: "Nock an arrow and read the tracks before moving", next: "bow-path", tone: "clever" }
       ]
     },
     steps: [
       {
         id: "tree-path",
         text:
-          "Atalanta slipped between two thick trees. She found fresh tracks in the dirt and broken branches low to the ground. The beast was near, but it had not seen her yet.",
+          "Atalanta ghosted through the forest. No sound. Not one snapped twig. She found the tracks — huge, deep, heavy. The boar was enormous. Then she found something else: a tree, scratched ten feet up. The boar had sharpened its tusks there. She stared at the gouge marks and swallowed.",
         choices: [
-          { label: "Follow the tracks slowly", next: "creek-path", tone: "careful" },
-          { label: "Jump over the brush and charge", next: "fail-rush", tone: "brave" },
-          { label: "Mark the trail with an arrow scratch", next: "ridge-path", tone: "clever" }
+          { label: "Follow the tracks very slowly", next: "creek-path", tone: "careful" },
+          { label: "Sprint after it right now — catch it before it reaches open ground!", next: "fail-rush", tone: "brave" },
+          { label: "Climb the tree for a higher view of the trail ahead", next: "ridge-path", tone: "clever" }
         ]
       },
       {
         id: "rush-path",
         text:
-          "Atalanta ran fast down the trail. The branches slapped past her shoulders. She heard the beast ahead, but speed alone made the forest hard to read.",
+          "Atalanta RAN. Nobody ran like Atalanta. She covered ground so fast that birds barely had time to get out of her way. She heard the boar ahead — crashing, snorting — and pushed harder. But she was moving so fast the forest was a blur, and she had no idea where the boar was going to TURN.",
         choices: [
-          { label: "Slow down and listen", next: "creek-path", tone: "careful" },
-          { label: "Leap toward the sound", next: "fail-rush", tone: "brave" },
-          { label: "Climb a low rock to look ahead", next: "ridge-path", tone: "clever" }
+          { label: "Slow down before you run into it face-first", next: "creek-path", tone: "careful" },
+          { label: "Jump over the next bush and LAND on it!", next: "fail-rush", tone: "brave" },
+          { label: "Veer left — get parallel to it and get ahead for an angle shot", next: "ridge-path", tone: "clever" }
         ]
       },
       {
         id: "bow-path",
         text:
-          "Atalanta lifted her bow and studied the trail. One branch bent toward a creek. Another pointed up toward a ridge. A smart hunter could read both the ground and the trees.",
+          "Atalanta crouched and studied the ground. Three tracks going forward. One track turning left. The boar had doubled back — it was SMART. A smart boar. She adjusted her grip on the bow. Smart hunters beat smart beasts by being just a little smarter.",
         choices: [
-          { label: "Head toward the creek", next: "creek-path", tone: "careful" },
-          { label: "Run through the brush now", next: "twist-ending", tone: "brave" },
-          { label: "Take the ridge for a better view", next: "ridge-path", tone: "clever" }
+          { label: "Follow the doubling-back track to where it leads", next: "creek-path", tone: "careful" },
+          { label: "Rush to where the track turns and catch it mid-turn!", next: "twist-ending", tone: "brave" },
+          { label: "Circle wide to get ahead of where it's going", next: "ridge-path", tone: "clever" }
         ]
       },
       {
         id: "creek-path",
         text:
-          "The trail crossed a shallow creek. Atalanta saw clear hoofprints in the mud and one safe stone path over the water. The wrong step would splash and give her away.",
+          "A shallow creek. Atalanta saw the hoofprints in the mud — and the boar's track going straight through the water. It had WADED. She watched the far bank. Reeds moving. A flash of grey bristle. The boar was on the other side, less than thirty steps away, not looking her direction.",
         choices: [
-          { label: "Cross on the stones", next: "hunter-ring", tone: "careful" },
-          { label: "Splash straight through", next: "fail-rush", tone: "brave" },
-          { label: "Use the bow to test each stone", next: "hunter-ring", tone: "clever" }
+          { label: "Nock an arrow and creep to the bank silently", next: "hunter-ring", tone: "careful" },
+          { label: "Sprint across the creek and close the distance NOW!", next: "fail-rush", tone: "brave" },
+          { label: "Use the creek noise to cover your crossing — step on the stones quickly", next: "hunter-ring", tone: "clever" }
         ]
       },
       {
         id: "ridge-path",
         text:
-          "From the ridge, Atalanta could see the trail curve through a ring of trees. The beast circled there below. She had the better view now, but she still needed the better choice.",
+          "From the ridge, Atalanta could see the whole forest floor. The boar was circling a clearing below — it was confused, checking for danger. She had the height advantage. She had a clear line. She had one clean shot, but only if she moved to exactly the right spot on the ridge before it moved again.",
         choices: [
-          { label: "Move down quietly", next: "hunter-ring", tone: "careful" },
-          { label: "Jump from the ridge", next: "fail-rush", tone: "brave" },
-          { label: "Line up the path with the bow", next: "hunter-ring", tone: "clever" }
+          { label: "Slide down the ridge quietly to get in range", next: "hunter-ring", tone: "careful" },
+          { label: "Jump off the ridge — fall straight on it from above!", next: "fail-rush", tone: "brave" },
+          { label: "Take the shot from here — maximum range, but you're ATALANTA", next: "hero-win", tone: "clever" }
         ]
       },
       {
         id: "hunter-ring",
         text:
-          "Atalanta reached a ring of old trees where the beast paced in the shadows. She had a clear line, a steady bow, and one last chance to choose the right hunter's move.",
+          "The boar stepped into a ring of old oak trees. It turned its head slowly. It was enormous. The tusks were exactly as bad as the scratch marks had promised. Atalanta had one arrow nocked and one clear line. She breathed in. She breathed out. Her hands were perfectly steady.",
         choices: [
-          { label: "Wait, breathe, and aim true", next: "legend-path", tone: "careful" },
-          { label: "Rush in with a shout", next: "fail-rush", tone: "brave" },
-          { label: "Circle wide and take the shot", next: "hero-win", tone: "clever" }
+          { label: "Wait for it to fully stop — then release", next: "legend-path", tone: "careful" },
+          { label: "Shout and release at the same instant — surprise shot!", next: "brave-shout-shot", tone: "brave" },
+          { label: "Step sideways for a better angle, then shoot", next: "hero-win", tone: "clever" }
         ]
       }
     ],
     endings: [
       {
         id: "legend-path",
-        title: "Legend Path",
+        title: "The True Legend",
         text:
-          "Atalanta stayed calm, read the forest well, and made the clean hunter's choice. She won with speed, skill, and perfect aim.",
+          "The boar stopped. Atalanta released. The arrow flew clean and true through the ring of oaks and struck exactly where she'd aimed. The Calydonian Boar went down. The other hunters arrived twenty minutes later and found Atalanta sitting on a log, eating an apple, with the boar already dealt with.",
         epilogue:
-          "The forest fell quiet around her. She had followed the strongest path for a hero known for sharp eyes and fast feet.",
+          "That's the real myth. Atalanta drew first blood in the Calydonian Boar hunt — the first hunter to land a shot. Speed, yes. But the winning shot was calm, cold, and perfectly placed.",
         reward: "Legend reward: Hunter's Aim",
         result: "legend",
         mythTrue: true
       },
       {
+        id: "brave-shout-shot",
+        title: "Hero Win (Bold Shot)",
+        text:
+          "ATALANTA YELLED. The boar spun toward the sound — and she released the arrow in that exact instant, aimed at where she knew it would spin to. The arrow hit. She was already laughing before the boar went down. It was an impossible shot. It worked because she's ATALANTA.",
+        epilogue:
+          "Speed AND nerve. She knew exactly what she was doing. The other hunters will never believe it.",
+        reward: "Reward: Bold Hunter's Shot",
+        result: "win"
+      },
+      {
         id: "hero-win",
         title: "Hero Win",
         text:
-          "Atalanta circled wide, kept her balance, and found a smart shot. It was not the most classic path, but it still ended in a hero's victory.",
+          "Atalanta took her angle, made her shot, and the hunt was over. It wasn't the cleanest or most elegant moment — but the boar was down, and she was the one who'd done it. Again.",
         epilogue:
-          "The trail behind her showed quick thinking and strong skill. The forest remembered the win anyway.",
+          "She always figures it out. That's what makes her Atalanta.",
         reward: "Reward: Forest Champion",
         result: "win"
       },
@@ -661,9 +701,9 @@ export const questCatalog = [
         id: "close-call",
         title: "Close Call",
         text:
-          "Atalanta escaped the danger and kept herself safe, but the beast broke away before the quest was done.",
+          "The boar heard her and charged. Atalanta ran — and nobody outruns Atalanta. She was safe before the boar had taken three steps. She'd try again with a better position. The forest trail would be ready.",
         epilogue:
-          "A fast retreat can still be a smart move. The forest trail will be ready when she returns.",
+          "Running away doesn't count as losing when you're the fastest human alive. It just counts as strategic.",
         reward: "Outcome: Beast Escapes",
         result: "close"
       },
@@ -671,20 +711,20 @@ export const questCatalog = [
         id: "twist-ending",
         title: "Twist Ending",
         text:
-          "Atalanta rushed through the brush and startled a whole family of deer instead. They burst across the trail in every direction while the real beast slipped away.",
+          "Atalanta crashed through the brush and hit a hornets' nest. The hornets hit the boar. The boar ran away faster than Atalanta had ever seen anything run. She stood in the clearing, covered in leaves, watching it vanish into the distance. Then she started laughing.",
         epilogue:
-          "The forest answered her speed with chaos. It was not the ending she wanted, but it was a wild one.",
-        reward: "Outcome: Deer Dash",
+          "The boar escaped. The hornets did not. It was not the hunt she planned. It was funnier.",
+        reward: "Outcome: Hornet Assist",
         result: "twist"
       },
       {
         id: "fail-rush",
-        title: "Try Again",
+        title: "Oops! Try Again",
         text:
-          "Atalanta moved too fast and gave her place away. The beast crashed deeper into the woods before she could finish the hunt.",
+          "Atalanta ran so fast she got ahead of the boar, then ran past where it turned, then ran in completely the wrong direction for a while, then had to stop and figure out where she was. By the time she found the trail again, the boar was long gone and the other hunters were confused about why she was out of breath.",
         epilogue:
-          "Even a swift hero must sometimes slow down. The best hunter reads the forest before taking the shot.",
-        reward: "Try again: Slow aim beats fast feet",
+          "Even the fastest hunter needs to know where she's GOING. Read the tracks first. Try again!",
+        reward: "Try again: Speed needs a direction",
         result: "fail"
       }
     ]
@@ -700,83 +740,83 @@ export const questCatalog = [
     start: {
       id: "start",
       text:
-        "Jason stood at the harbor docks before sunrise. He held a sea map in both hands. The tide was low, the ropes creaked, and a shadow moved between the boats.",
+        "Before the Golden Fleece, before the monsters and the sea dragons — there was just this: Jason standing at the harbor before dawn with a sea map that Chiron the centaur had given him. The Argo was somewhere in this harbor. His crew was waiting. A rival captain had tampered with the dock markers to make Jason get on the wrong boat. Jason could see three shapes in the fog. Only one was the Argo.",
       choices: [
-        { label: "Study the map first", next: "map-path", tone: "clever" },
-        { label: "Run to the nearest boat", next: "rush-path", tone: "brave" },
-        { label: "Listen by the water", next: "dock-path", tone: "careful" }
+        { label: "Study the map carefully before moving", next: "map-path", tone: "clever" },
+        { label: "Run to the nearest boat — time is short!", next: "rush-path", tone: "brave" },
+        { label: "Kneel by the water and listen to the harbor", next: "dock-path", tone: "careful" }
       ]
     },
     steps: [
       {
         id: "map-path",
         text:
-          "Jason traced the harbor with one finger. The map showed a safe dock, a narrow gangplank, and a warning mark near the far boats. He could plan his path before he moved.",
+          "Jason spread the map flat on a dock post. The harbor was right there, marked in detail. Chiron had drawn every dock, every post, every warning — including a red X on the far dock. 'Do not board the boat at the red X.' The fog was thick, but Jason had the map. He could figure this out.",
         choices: [
-          { label: "Take the safe dock", next: "rope-bridge", tone: "careful" },
-          { label: "Dash for the far boats", next: "fail-rush", tone: "brave" },
-          { label: "Mark the warning spot on the map", next: "harbor-turn", tone: "clever" }
+          { label: "Follow the map to the safe dock first", next: "rope-bridge", tone: "careful" },
+          { label: "Ignore the X and check that boat anyway — it might be a trick", next: "fail-rush", tone: "brave" },
+          { label: "Use the map to mark where all three boats are positioned", next: "harbor-turn", tone: "clever" }
         ]
       },
       {
         id: "rush-path",
         text:
-          "Jason ran across the wet boards. The harbor wind pushed at his cloak. One loose plank knocked under his foot, and the dark water slapped the side of the dock.",
+          "Jason sprinted across the wet dock boards — and a loose plank shot out from under his foot like a banana peel. He grabbed a rope post, swung around wildly, and ended up facing back the way he came. His crew (watching from a window) did not look impressed. He had about thirty seconds before the tide turned.",
         choices: [
-          { label: "Slow down and look around", next: "rope-bridge", tone: "careful" },
-          { label: "Leap to the next boat", next: "fail-rush", tone: "brave" },
-          { label: "Pull out the map now", next: "harbor-turn", tone: "clever" }
+          { label: "Stop and look around before moving again", next: "rope-bridge", tone: "careful" },
+          { label: "JUMP to the nearest boat right now!", next: "fail-rush", tone: "brave" },
+          { label: "Pull out the map and use the last thirty seconds to think", next: "harbor-turn", tone: "clever" }
         ]
       },
       {
         id: "dock-path",
         text:
-          "Jason knelt near the edge of the dock. He heard water moving under the boards and a rope tapping a mast in the wind. The harbor had a rhythm if he listened closely.",
+          "Jason pressed his hand to the dock and listened to the water. The harbor had a rhythm — tide pulling, ropes creaking, wood groaning. He'd been on enough boats to know: the Argo had a sound. Chiron had told him. A deep wooden groan, like it was always ready to go.",
         choices: [
-          { label: "Follow the quiet rhythm", next: "rope-bridge", tone: "careful" },
-          { label: "Call out into the fog", next: "twist-ending", tone: "brave" },
-          { label: "Check the map with the tide sounds", next: "harbor-turn", tone: "clever" }
+          { label: "Follow the sound toward the deep groan", next: "rope-bridge", tone: "careful" },
+          { label: "Call out into the fog — someone will answer!", next: "twist-ending", tone: "brave" },
+          { label: "Match the sound to the map — find the position of each boat", next: "harbor-turn", tone: "clever" }
         ]
       },
       {
         id: "rope-bridge",
         text:
-          "Jason reached a narrow rope bridge between two dock posts. The boards were slick, but a line of lantern hooks showed the steady route forward.",
+          "A narrow rope bridge between two dock sections. Slick boards. The fog was so thick Jason could barely see his next footstep. But the harbor sounds were clearer now — one boat thumping loudly, one boat barely moving, one boat making that deep, confident groan he was listening for.",
         choices: [
-          { label: "Step across one board at a time", next: "harbor-turn", tone: "careful" },
-          { label: "Run before the bridge sways", next: "fail-rush", tone: "brave" },
-          { label: "Use the map to check your direction", next: "harbor-turn", tone: "clever" }
+          { label: "Step across carefully, one board at a time", next: "harbor-turn", tone: "careful" },
+          { label: "Run across before the bridge sways and tips him!", next: "fail-rush", tone: "brave" },
+          { label: "Check the map's direction markings while crossing slowly", next: "harbor-turn", tone: "clever" }
         ]
       },
       {
         id: "harbor-turn",
         text:
-          "At the far side of the bridge, Jason saw three boats tied together. One held cargo, one looked empty, and one had a torn sail. The map showed only one as safe.",
+          "Three boats, tied in a row. Jason stood in front of them. On the left: a big cargo ship with too much rope and a smell of old fish. In the middle: a sleek fast boat with a torn sail. On the right: the deep groan. A long, wide ship with a golden prow painted at the bow. Jason checked the map. The right-side boat matched every marking.",
         choices: [
-          { label: "Board the safe boat", next: "golden-bow", tone: "careful" },
-          { label: "Jump to the torn-sail boat", next: "fail-rush", tone: "brave" },
-          { label: "Check the map against the sail marks", next: "golden-bow", tone: "clever" }
+          { label: "Board the right-side boat — it matches the map perfectly", next: "golden-bow", tone: "careful" },
+          { label: "Try the middle one first — that fast boat looks amazing", next: "fail-rush", tone: "brave" },
+          { label: "Double-check the prow marking against Chiron's drawing", next: "golden-bow", tone: "clever" }
         ]
       },
       {
         id: "golden-bow",
         text:
-          "On the safe boat, Jason found a locked chest and a gold-painted prow facing open water. The harbor path was nearly won, but the last choice still mattered.",
+          "Aboard the Argo. The ship felt right the second his feet hit the deck. His crew appeared from the fog — grinning, ready. The locked chest in the middle had a small key tied to the mast. Chiron had mentioned this. One last check before they sailed.",
         choices: [
-          { label: "Trust the map and take the marked route", next: "legend-path", tone: "careful" },
-          { label: "Push off at once and hope", next: "fail-rush", tone: "brave" },
-          { label: "Use the map and tide marks together", next: "hero-win", tone: "clever" }
+          { label: "Use the map's final marking to find the safe route out of the harbor", next: "legend-path", tone: "careful" },
+          { label: "Cast off right now and figure out the route as they go!", next: "fail-rush", tone: "brave" },
+          { label: "Open the chest with the key — the route is written inside", next: "hero-win", tone: "clever" }
         ]
       }
     ],
     endings: [
       {
         id: "legend-path",
-        title: "Legend Path",
+        title: "The True Legend",
         text:
-          "Jason trusted the map, read the harbor well, and followed the safest marked route. He won like a true quest leader who knows planning beats rushing.",
+          "Jason found the Argo. He rallied his crew. He read the final map marking and called the route out clearly, and the Argo slipped out of the harbor through the fog just as the sun came up. The crew cheered. Jason didn't cheer. He was already studying the next part of the map.",
         epilogue:
-          "The dawn opened over the water as he left the docks behind. Calm thinking guided him better than speed ever could.",
+          "The real Jason was never just brave. He was the leader who made a PLAN and trusted it. The Golden Fleece was waiting, and he was already thinking three steps ahead.",
         reward: "Legend reward: Captain's Route",
         result: "legend",
         mythTrue: true
@@ -785,9 +825,9 @@ export const questCatalog = [
         id: "hero-win",
         title: "Hero Win",
         text:
-          "Jason used the map and the tide together. It was not the straight old-story path, but it was a smart one, and it carried him safely through the harbor.",
+          "The chest had the full route to open water inside, written in Chiron's careful hand. Jason read it aloud to the crew and they sailed out of the harbor perfectly. He might have figured out the route himself anyway. Probably. Either way, the Argo was free.",
         epilogue:
-          "He earned the win by thinking like a leader and moving at the right moment.",
+          "A good leader uses every tool available. The map, the crew, the chest — all of it. That's how you start a quest right.",
         reward: "Reward: Harbor Captain",
         result: "win"
       },
@@ -795,9 +835,9 @@ export const questCatalog = [
         id: "close-call",
         title: "Close Call",
         text:
-          "Jason found a safe way back from the docks, but he had to stop before the quest was fully won. He kept the map and lived to sail again.",
+          "Jason got the crew on board but couldn't figure out the harbor route before the tide shifted. They had to drop anchor and wait. He used the time to study the map. An hour later, he had it figured out and the Argo sailed out into a perfectly clear morning.",
         epilogue:
-          "Sometimes a good retreat saves the next adventure. The harbor still holds more to discover.",
+          "Sometimes the best move is to stop and plan when you have the chance. The Golden Fleece would still be there in an hour.",
         reward: "Outcome: Safe Return",
         result: "close"
       },
@@ -805,19 +845,19 @@ export const questCatalog = [
         id: "twist-ending",
         title: "Twist Ending",
         text:
-          "Jason called into the fog, and five dock birds answered him at once. They burst from a mast rope in a loud flapping cloud and nearly knocked his map from his hands.",
+          "Jason called into the fog. His voice echoed around the whole harbor. Every single person in the harbor — dock workers, fishermen, rival sailors — called back at once, thinking it was a signal. The resulting noise was so confusing that the rival captain who had tampered with the markers panicked, tripped over his own ropes, and fell into the harbor. This somehow made it very easy to identify the Argo (it was the only boat nobody was falling off of).",
         epilogue:
-          "The harbor answered with noise, feathers, and surprise. It was not the neat ending he wanted, but it was a funny one.",
-        reward: "Outcome: Dock Bird Burst",
+          "Sometimes chaos works in your favor. Jason would put this in his list of plans. Right at the bottom, under 'last resort.'",
+        reward: "Outcome: Harbor Confusion",
         result: "twist"
       },
       {
         id: "fail-rush",
-        title: "Try Again",
+        title: "Oops! Try Again",
         text:
-          "Jason moved too fast over the wet docks and lost the best route. He had to grab a post, pull himself back, and begin again with a calmer head.",
+          "Jason boarded a boat that was absolutely not the Argo. He knew something was wrong immediately. The boat smelled wrong, felt wrong, and the map didn't match anything about it at all. He got off before anyone saw him (someone absolutely saw him). Back to the dock.",
         epilogue:
-          "A great quest leader does not just run first. Next time, the map must lead the way.",
+          "The map was right there in his hands! Read the map FIRST. Try again!",
         reward: "Try again: Read the route first",
         result: "fail"
       }
