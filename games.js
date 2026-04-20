@@ -1,4 +1,4 @@
-import { triviaLevels } from "./data.js";
+import { triviaLevels, getEntryById } from "./data.js";
 import {
   recordBattleResult,
   recordMemoryComplete,

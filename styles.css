@@ -3495,6 +3495,12 @@ body.page-games {
 }
 
 /* ── Game panels (shared) ─────────────────────────────────── */
+/* Enforce [hidden] — CSS display rules override the browser default otherwise */
+.game-panel[hidden],
+.games-picker[hidden] {
+  display: none;
+}
+
 .game-panel {
   display: flex;
   flex-direction: column;
