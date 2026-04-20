@@ -950,11 +950,6 @@ function renderWordSearchGridEl(grid) {
         wordSearchDrag = { start:{ row:ri, col:ci }, end:{ row:ri, col:ci } };
         updateWordSearchCellStates();
       });
-      cell.addEventListener("pointerenter", () => {
-        if (!wordSearchDrag) return;
-        wordSearchDrag.end = { row:ri, col:ci };
-        updateWordSearchCellStates();
-      });
       wordSearchGrid.appendChild(cell);
     });
   });
@@ -991,6 +986,19 @@ wordSearchCategoryButtons.forEach(b =>
 );
 
 wordSearchReset.addEventListener("click", buildWordSearch);
+
+// Mobile drag: use pointermove + elementFromPoint on the grid so touch drag
+// works reliably — pointerenter on sibling cells doesn't fire during touch
+wordSearchGrid.addEventListener("pointermove", e => {
+  if (!wordSearchDrag) return;
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  if (!el || !el.dataset.row) return;
+  const r = parseInt(el.dataset.row, 10);
+  const c = parseInt(el.dataset.col, 10);
+  if (wordSearchDrag.end.row === r && wordSearchDrag.end.col === c) return;
+  wordSearchDrag.end = { row: r, col: c };
+  updateWordSearchCellStates();
+});
 
 window.addEventListener("pointerup", finalizeWordSearchDrag);
 

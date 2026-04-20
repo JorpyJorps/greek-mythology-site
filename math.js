@@ -11,7 +11,7 @@ const SFX_KEY        = "miles-sfx";
 const DAILY_BOLT_CAP    = 20;   // max bolts earnable from math per day
 const BOLT_EVERY        = 10;   // earn 1 bolt every N correct answers
 const MILESTONE_TEN     = 10;   // lightning flash every N correct (same as BOLT_EVERY)
-const MILESTONE_UNLOCK  = 40;   // correct today → unlock maze
+const MILESTONE_UNLOCK  = 20;   // correct today → unlock maze
 const STREAK_DISPLAY    = 5;    // dots shown in streak HUD
 
 // ── DOM refs ──────────────────────────────────────────────
@@ -228,13 +228,22 @@ function renderLevelBadge() {
 }
 
 function renderDailyBar() {
-  const pct = Math.min(100, (progress.dailyBoltsEarned / DAILY_BOLT_CAP) * 100);
-  dailyFill.style.width = `${pct}%`;
-  const capped = progress.dailyBoltsEarned >= DAILY_BOLT_CAP;
-  const toNext = BOLT_EVERY - (progress.dailyCorrect % BOLT_EVERY);
-  dailyLabel.textContent = capped
-    ? `⚡ ${progress.dailyBoltsEarned} BOLTS TODAY`
-    : `⚡ ${progress.dailyBoltsEarned} BOLTS  •  ${toNext} TO NEXT`;
+  const mazeUnlocked = progress.dailyCorrect >= MILESTONE_UNLOCK;
+  // bar shows maze unlock progress until unlocked, then bolt progress
+  if (!mazeUnlocked) {
+    const pct = Math.min(100, (progress.dailyCorrect / MILESTONE_UNLOCK) * 100);
+    dailyFill.style.width = `${pct}%`;
+    const remaining = MILESTONE_UNLOCK - progress.dailyCorrect;
+    dailyLabel.textContent = `🏛️ ${progress.dailyCorrect} / ${MILESTONE_UNLOCK}  •  ${remaining} TO UNLOCK MAZE`;
+  } else {
+    const pct = Math.min(100, (progress.dailyBoltsEarned / DAILY_BOLT_CAP) * 100);
+    dailyFill.style.width = `${pct}%`;
+    const capped = progress.dailyBoltsEarned >= DAILY_BOLT_CAP;
+    const toNext = BOLT_EVERY - (progress.dailyCorrect % BOLT_EVERY);
+    dailyLabel.textContent = capped
+      ? `🏛️ MAZE UNLOCKED  •  ⚡ ${progress.dailyBoltsEarned} BOLTS`
+      : `🏛️ MAZE UNLOCKED  •  ⚡ ${progress.dailyBoltsEarned} BOLTS  •  ${toNext} TO NEXT`;
+  }
 }
 
 function renderHud() {
