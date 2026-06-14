@@ -3515,7 +3515,11 @@ body.page-games {
 /* ── Game panels (shared) ─────────────────────────────────── */
 /* Enforce [hidden] — CSS display rules override the browser default otherwise */
 .game-panel[hidden],
-.games-picker[hidden] {
+.games-picker[hidden],
+.bp-select[hidden],
+.bp-fight[hidden],
+.bp-monster-grid[hidden],
+.bp-end-actions[hidden] {
   display: none;
 }
 

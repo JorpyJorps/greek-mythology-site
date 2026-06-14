@@ -332,7 +332,7 @@ function handleWin() {
     // Final level — send to battle
     showOverlay("⚔️", "YOU FOUND HIM!",
       "You've navigated the full labyrinth. Now face the Minotaur in battle!",
-      "FIGHT THE MINOTAUR", () => { window.location.href = "./games.html?battle=theseus"; },
+      "FIGHT THE MINOTAUR", () => { window.location.href = "./games?battle=theseus"; },
       "PLAY AGAIN", () => startLevel(0, true));
   } else {
     const next = lvlIdx + 1;

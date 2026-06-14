@@ -11,6 +11,7 @@ import {
 const BOLT_KEY   = "miles-bolts";
 const SCROLL_KEY = "miles-scrolls";
 const GAMES_KEY  = "miles-games-progress";
+const LAST_HERO_KEY = "miles-last-hero";
 
 const TRIVIA_DAILY_CAP      = 15;
 const MEMORY_DAILY_CAP      = 10;
@@ -568,6 +569,19 @@ function startBattle() {
   bpGoBtn.hidden       = true;
   bpPhaseLabel.textContent = "BATTLE";
   renderBpHeroGrid();
+
+  // remember last hero pick — preselect it (foe still needs choosing)
+  const lastHero = localStorage.getItem(LAST_HERO_KEY);
+  if (lastHero && BP_HEROES[lastHero]) bpSelectHero(lastHero);
+}
+
+function bpSelectHero(key) {
+  bpHeroKey = key;
+  localStorage.setItem(LAST_HERO_KEY, key);
+  bpHeroGrid.querySelectorAll(".bp-pick-card").forEach(b => b.classList.toggle("is-selected", b.dataset.key === key));
+  bpVsHint.hidden      = false;
+  bpMonsterGrid.hidden = false;
+  if (bpMonsterKey) bpGoBtn.hidden = false;
 }
 
 function renderBpHeroGrid() {
@@ -578,13 +592,7 @@ function renderBpHeroGrid() {
     btn.className = "bp-pick-card";
     btn.dataset.key = key;
     btn.innerHTML = `<span class="bp-pick-icon">${hero.icon}</span><span class="pixel bp-pick-name">${hero.name}</span>`;
-    btn.addEventListener("click", () => {
-      bpHeroKey = key;
-      bpHeroGrid.querySelectorAll(".bp-pick-card").forEach(b => b.classList.toggle("is-selected", b.dataset.key === key));
-      bpVsHint.hidden      = false;
-      bpMonsterGrid.hidden = false;
-      if (bpMonsterKey) bpGoBtn.hidden = false;
-    });
+    btn.addEventListener("click", () => bpSelectHero(key));
     bpHeroGrid.appendChild(btn);
   });
 }
@@ -1002,5 +1010,23 @@ wordSearchGrid.addEventListener("pointermove", e => {
 
 window.addEventListener("pointerup", finalizeWordSearchDrag);
 
+// Maze Level-10 winners arrive at games.html?battle=theseus — drop them
+// straight into the canon fight (hero from param, foe locked to Minotaur).
+function bpDirectMatch(heroParam) {
+  const heroKey = BP_HEROES[heroParam] ? heroParam : "theseus";
+  showPanel("battle");
+  bpHeroKey    = heroKey;
+  bpMonsterKey = "minotaur";
+  localStorage.setItem(LAST_HERO_KEY, heroKey);
+  bpStartFight();
+}
+
 // ── Init ───────────────────────────────────────────────────
-showPicker();
+const battleParam = new URLSearchParams(location.search).get("battle");
+if (battleParam) {
+  bpDirectMatch(battleParam);
+  // strip the param so a refresh returns to the normal arena
+  history.replaceState(null, "", location.pathname);
+} else {
+  showPicker();
+}
