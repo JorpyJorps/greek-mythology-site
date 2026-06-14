@@ -118,11 +118,11 @@ if ('serviceWorker' in navigator) {
   const page = location.pathname.split('/').pop() || 'index.html';
 
   const links = [
-    { href: '/index.html',  label: 'Home',  icon: '🏛️' },
-    { href: '/games.html',  label: 'Games', icon: '⚔️' },
-    { href: '/math.html',   label: 'Math',  icon: '⚡' },
-    { href: '/quest.html',  label: 'Quest', icon: '📜' },
-    { href: '/wiki.html',   label: 'Wiki',  icon: '📖' },
+    { href: '/index.html',  label: 'Home',    icon: '🏛️' },
+    { href: '/math.html',   label: 'Math',    icon: '⚡' },
+    { href: '/games.html',  label: 'Games',   icon: '⚔️' },
+    { href: '/quest.html',  label: 'Quest',   icon: '📜' },
+    { href: '/wiki.html',   label: 'Legends', icon: '📖' },
   ];
 
   const nav = document.createElement('nav');

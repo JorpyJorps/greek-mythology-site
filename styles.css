@@ -2830,6 +2830,24 @@ body::after {
   opacity: 1;
 }
 
+.title-menu-item--hero {
+  padding: 22px 20px;
+  min-height: 72px;
+  font-size: 0.86rem;
+  background: rgba(243, 201, 105, 0.12);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px rgba(243, 201, 105, 0.25), 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+
+.title-menu-item--hero .menu-icon {
+  font-size: 1.5rem;
+}
+
+.title-menu-item--hero:hover,
+.title-menu-item--hero:focus-visible {
+  background: rgba(243, 201, 105, 0.2);
+}
+
 .menu-cursor {
   color: var(--gold);
   opacity: 0;
